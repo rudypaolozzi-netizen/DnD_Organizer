@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                    },
+                    fontFamily: {
+                        "display": ["Be Vietnam Pro"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>Profil de l'Aventurier - D&amp;D</title>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Header / Top Bar -->
+<div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between border-b border-primary/10">
+<div class="text-slate-900 dark:text-slate-100 flex size-12 shrink-0 items-center justify-center">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-tight flex-1 text-center">Mon Profil Aventurier</h2>
+<div class="flex w-12 items-center justify-end">
+<button class="flex items-center justify-center rounded-lg h-12 bg-transparent text-slate-900 dark:text-slate-100 p-0">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</div>
+<main class="flex-1 pb-24">
+<!-- Avatar Section -->
+<div class="flex p-6 @container justify-center">
+<div class="flex flex-col gap-6 items-center">
+<div class="relative">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full border-4 border-primary shadow-[0_0_20px_rgba(19,236,91,0.3)] min-h-32 w-32" data-alt="Portrait d'un guerrier fantastique mystérieux" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBazXEHFHvCHrdSojK4o-h568nvXdMgvFxe6wkxl82Sh9Bi-FY9ZbQIJQ6T6KPeHRiqy2ntRT77CzEovfK8YgRk_qyS8eE7uRCYjYDXUUDGjdHNtJpuvQv6N9twuNRCxPqaBbLSQd1Lr4UuyKFUR7ciyj30nTZk1P_A1DW70a79VedHuv-jN2z6NFygK5IMDM78OjtXVOdPyreTvKVXn7Mr_G0c0fGFySAs-sfK7imfqpcpfvXtLeN4-rckEVbNupKBtT-ShanBNoM");'>
+</div>
+<button class="absolute bottom-0 right-0 bg-primary text-background-dark p-2 rounded-full shadow-lg flex items-center justify-center border-2 border-background-dark">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+</div>
+<div class="flex flex-col items-center justify-center">
+<p class="text-slate-900 dark:text-slate-100 text-2xl font-black leading-tight tracking-tight text-center">Valerius l'Ombre</p>
+<p class="text-primary text-sm font-bold uppercase tracking-widest text-center mt-1">Paladin de Niveau 15</p>
+</div>
+</div>
+</div>
+<!-- Profile Form -->
+<div class="px-6 space-y-6 max-w-md mx-auto">
+<h3 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight border-l-4 border-primary pl-3">Paramètres du Grimoire</h3>
+<div class="space-y-4">
+<!-- Pseudo Field -->
+<div class="flex flex-col gap-2">
+<label class="text-slate-700 dark:text-slate-300 text-sm font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-lg">badge</span>
+                            Nom de Héros (Pseudo)
+                        </label>
+<input class="w-full rounded-lg border border-primary/20 bg-primary/5 dark:bg-background-dark p-4 text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Valerius l'Ombre" type="text" value="Valerius l'Ombre"/>
+</div>
+<!-- Email Field -->
+<div class="flex flex-col gap-2">
+<label class="text-slate-700 dark:text-slate-300 text-sm font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-lg">mail</span>
+                            Adresse de Messagerie (Email)
+                        </label>
+<input class="w-full rounded-lg border border-primary/20 bg-primary/5 dark:bg-background-dark p-4 text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="valerius@royaume.fr" type="email" value="valerius@royaume.fr"/>
+</div>
+<!-- Password Field -->
+<div class="flex flex-col gap-2">
+<label class="text-slate-700 dark:text-slate-300 text-sm font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-lg">lock</span>
+                            Mot de Passe Arcane
+                        </label>
+<div class="relative">
+<input class="w-full rounded-lg border border-primary/20 bg-primary/5 dark:bg-background-dark p-4 pr-12 text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="••••••••••••" type="password" value="motdepassesecret"/>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
+<span class="material-symbols-outlined">visibility_off</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Action Button -->
+<div class="pt-4">
+<button class="w-full bg-primary hover:bg-primary/90 text-background-dark font-black py-4 rounded-xl shadow-[0_4px_14px_rgba(19,236,91,0.4)] transition-all active:scale-95 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">auto_fix_high</span>
+                        ENREGISTRER LES MODIFICATIONS
+                    </button>
+<p class="text-center text-xs text-slate-500 dark:text-slate-400 mt-4 italic">
+                        "Que vos choix soient gravés dans la pierre éternelle."
+                    </p>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<div class="fixed bottom-0 left-0 right-0 flex border-t border-primary/10 bg-background-light dark:bg-background-dark px-4 pb-6 pt-2 z-50">
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400 hover:text-primary" href="#">
+<span class="material-symbols-outlined">home</span>
+<p class="text-[10px] font-bold uppercase tracking-tighter">Accueil</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400 hover:text-primary" href="#">
+<span class="material-symbols-outlined">event_available</span>
+<p class="text-[10px] font-bold uppercase tracking-tighter">Session</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400 hover:text-primary" href="#">
+<span class="material-symbols-outlined">history</span>
+<p class="text-[10px] font-bold uppercase tracking-tighter">Historique</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<p class="text-[10px] font-bold uppercase tracking-tighter">Profil</p>
+</a>
+</div>
+</div>
+</body></html>

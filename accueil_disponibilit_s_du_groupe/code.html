@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                    },
+                    fontFamily: {
+                        "display": ["Be Vietnam Pro"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: "Be Vietnam Pro", sans-serif;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased">
+<div class="relative flex h-screen max-w-md mx-auto flex-col bg-background-light dark:bg-background-dark overflow-hidden border-x border-primary/10">
+<header class="flex items-center bg-background-light dark:bg-background-dark p-4 border-b border-primary/20 justify-between">
+<button class="text-slate-900 dark:text-slate-100 flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-primary/10" style="">
+<span class="material-symbols-outlined" style="">arrow_back</span>
+</button>
+<h1 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-10" style="">Disponibilités du Groupe</h1>
+</header>
+<main class="flex-1 overflow-y-auto hide-scrollbar pb-32">
+<div class="px-4 py-6">
+<div class="flex items-center gap-3 mb-6">
+<div class="size-12 rounded-xl bg-primary/20 flex items-center justify-center border border-primary/30">
+<span class="material-symbols-outlined text-primary" style="">fort</span>
+</div>
+<div>
+<h2 class="text-xl font-bold" style="">Campagne : L'Ombre d'Eldoria</h2>
+<p class="text-sm text-slate-500 dark:text-slate-400" style="">Semaine du 15 au 21 Mai</p>
+</div>
+</div>
+<div class="overflow-x-auto hide-scrollbar rounded-xl border border-primary/20 bg-primary/5">
+<table class="w-full border-collapse">
+<thead>
+<tr class="bg-primary/10">
+<th class="p-3 text-left text-xs font-bold uppercase tracking-wider border-b border-primary/20 sticky left-0 bg-background-dark/95 backdrop-blur z-10" style="">Joueurs</th>
+<th class="p-3 text-center text-xs font-bold uppercase tracking-wider border-b border-l border-primary/20" colspan="2" style="">Lundi <br/> <span class="text-[10px] font-medium">15</span></th>
+<th class="p-3 text-center text-xs font-bold uppercase tracking-wider border-b border-l border-primary/20" colspan="2" style="">Mardi <br/> <span class="text-[10px] font-medium">16</span></th>
+<th class="p-3 text-center text-xs font-bold uppercase tracking-wider border-b border-l border-primary/20" colspan="2" style="">Mercredi <br/> <span class="text-[10px] font-medium">17</span></th>
+<th class="p-3 text-center text-xs font-bold uppercase tracking-wider border-b border-l border-primary/20" colspan="2" style="">Jeudi <br/> <span class="text-[10px] font-medium">18</span></th>
+<th class="p-3 text-center text-xs font-bold uppercase tracking-wider border-b border-l border-primary/20" colspan="2" style="">Vendredi <br/> <span class="text-[10px] font-medium">19</span></th>
+<th class="p-3 text-center text-xs font-bold uppercase tracking-wider border-b border-l border-primary/20" colspan="2" style="">Samedi <br/> <span class="text-[10px] font-medium">20</span></th>
+<th class="p-3 text-center text-xs font-bold uppercase tracking-wider border-b border-l border-primary/20" colspan="2" style="">Dimanche <br/> <span class="text-[10px] font-medium">21</span></th>
+</tr>
+<tr class="bg-primary/5">
+<th class="p-2 border-b border-primary/10 sticky left-0 bg-background-dark/95 z-10 text-[8px]" style=""></th>
+<th class="p-1 text-center border-b border-l border-primary/10 text-[8px]" style="">14h-18h</th>
+<th class="p-1 text-center border-b border-primary/10 text-[8px]" style="">Soir</th>
+<th class="p-1 text-center border-b border-l border-primary/10 text-[8px]" style="">A-M</th>
+<th class="p-1 text-center border-b border-primary/10 text-[8px]" style="">Soir</th>
+<th class="p-1 text-center border-b border-l border-primary/10 text-[8px]" style="">A-M</th>
+<th class="p-1 text-center border-b border-primary/10 text-[8px]" style="">Soir</th>
+<th class="p-1 text-center border-b border-l border-primary/10 text-[8px]" style="">A-M</th>
+<th class="p-1 text-center border-b border-primary/10 text-[8px]" style="">Soir</th>
+<th class="p-1 text-center border-b border-l border-primary/10 text-[8px]" style="">A-M</th>
+<th class="p-1 text-center border-b border-primary/10 text-[8px]" style="">Soir</th>
+<th class="p-1 text-center border-b border-l border-primary/10 text-[8px]" style="">A-M</th>
+<th class="p-1 text-center border-b border-primary/10 text-[8px]" style="">Soir</th>
+<th class="p-1 text-center border-b border-l border-primary/10 text-[8px]" style="">A-M</th>
+<th class="p-1 text-center border-b border-primary/10 text-[8px]" style="">Soir</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-primary/10">
+<!-- Moi -->
+<tr class="bg-primary/10">
+<td class="p-3 font-bold text-primary text-sm sticky left-0 bg-primary/10 backdrop-blur z-10 border-r border-primary/20" style="">Moi (MJ)</td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-rose-500/80 border border-rose-400/50"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary border border-primary/50"></div></td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-rose-500/80 border border-rose-400/50"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary border border-primary/50"></div></td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary border border-primary/50"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary border border-primary/50"></div></td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-rose-500/80 border border-rose-400/50"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-rose-500/80 border border-rose-400/50"></div></td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-rose-500/80 border border-rose-400/50"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary border border-primary/50"></div></td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary border border-primary/50"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary border border-primary/50"></div></td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary border border-primary/50"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary border border-primary/50"></div></td>
+</tr>
+<!-- Joueur 1 -->
+<tr>
+<td class="p-3 text-sm sticky left-0 bg-background-dark/95 z-10 border-r border-primary/20" style="">Grog Ironfist</td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-rose-500/20 border border-rose-400/30"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary/40 border border-primary/30"></div></td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-rose-500/20 border border-rose-400/30"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary/40 border border-primary/30"></div></td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-rose-500/20 border border-rose-400/30"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-rose-500/20 border border-rose-400/30"></div></td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary/40 border border-primary/30"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary/40 border border-primary/30"></div></td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-rose-500/20 border border-rose-400/30"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary/40 border border-primary/30"></div></td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary/40 border border-primary/30"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary/40 border border-primary/30"></div></td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary/40 border border-primary/30"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary/40 border border-primary/30"></div></td>
+</tr>
+<!-- Joueur 2 -->
+<tr>
+<td class="p-3 text-sm sticky left-0 bg-background-dark/95 z-10 border-r border-primary/20" style="">Lyra Moonwhisper</td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary/40 border border-primary/30"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary/40 border border-primary/30"></div></td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary/40 border border-primary/30"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary/40 border border-primary/30"></div></td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary/40 border border-primary/30"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary/40 border border-primary/30"></div></td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary/40 border border-primary/30"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary/40 border border-primary/30"></div></td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary/40 border border-primary/30"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary/40 border border-primary/30"></div></td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-rose-500/20 border border-rose-400/30"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-rose-500/20 border border-rose-400/30"></div></td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-rose-500/20 border border-rose-400/30"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-rose-500/20 border border-rose-400/30"></div></td>
+</tr>
+<!-- Joueur 3 -->
+<tr>
+<td class="p-3 text-sm sticky left-0 bg-background-dark/95 z-10 border-r border-primary/20" style="">Borg the Bard</td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-rose-500/20 border border-rose-400/30"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-rose-500/20 border border-rose-400/30"></div></td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-rose-500/20 border border-rose-400/30"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-rose-500/20 border border-rose-400/30"></div></td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-rose-500/20 border border-rose-400/30"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-rose-500/20 border border-rose-400/30"></div></td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-rose-500/20 border border-rose-400/30"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-rose-500/20 border border-rose-400/30"></div></td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary/40 border border-primary/30"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary/40 border border-primary/30"></div></td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary/40 border border-primary/30"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary/40 border border-primary/30"></div></td>
+<td class="p-2 border-l border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary/40 border border-primary/30"></div></td>
+<td class="p-2 border-primary/10" style=""><div class="w-6 h-6 mx-auto rounded-md bg-primary/40 border border-primary/30"></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="mt-6 p-4 rounded-xl bg-primary/5 border border-primary/10">
+<h3 class="font-bold mb-3 flex items-center gap-2" style="">
+<span class="material-symbols-outlined text-primary text-sm" style="">info</span>
+                        Légende
+                    </h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 rounded bg-primary"></div>
+<span class="text-xs" style="">Disponible</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 rounded bg-rose-500/80"></div>
+<span class="text-xs" style="">Indisponible</span>
+</div>
+</div>
+<p class="text-[10px] mt-4 text-slate-500 dark:text-slate-400" style="">Cliquez sur vos propres cases pour basculer entre Disponible (Vert) et Indisponible (Rouge).</p>
+</div>
+</div>
+</main>
+<div class="absolute bottom-0 left-0 right-0 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md p-4 border-t border-primary/20 z-20">
+<button class="w-full bg-primary hover:bg-primary/90 text-background-dark font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-colors" style="">
+<span class="material-symbols-outlined" style="">save</span>
+                Enregistrer mes disponibilités
+            </button>
+<div class="flex gap-2 mt-4"><a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-500" href="#" style="">
+<span class="material-symbols-outlined" style="">home</span>
+<p class="text-[10px] font-medium" style="">Accueil</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-primary" href="#" style="">
+<span class="material-symbols-outlined" style="">event_available</span>
+<p class="text-[10px] font-medium" style="">Session</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-500" href="#" style="">
+<span class="material-symbols-outlined" style="">history</span>
+<p class="text-[10px] font-medium" style="">Historique</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-500" href="#" style="">
+<span class="material-symbols-outlined" style="">person</span>
+<p class="text-[10px] font-medium" style="">Profil</p>
+</a></div>
+</div>
+</div>
+</body></html>

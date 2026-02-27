@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Récapitulatif de la Session</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                        "surface-dark": "#162e1e", // Derived neutral
+                        "surface-darker": "#0d1b12", // Darker neutral
+                    },
+                    fontFamily: {
+                        "display": ["Be Vietnam Pro", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display min-h-screen text-slate-900 dark:text-slate-100 antialiased overflow-x-hidden">
+<!-- Main Container -->
+<div class="relative flex flex-col h-full min-h-screen w-full max-w-md mx-auto bg-background-light dark:bg-background-dark shadow-2xl overflow-hidden">
+<!-- Header -->
+<header class="flex items-center justify-between px-4 py-3 bg-surface-dark/50 backdrop-blur-md sticky top-0 z-10 border-b border-primary/10">
+<button class="flex items-center justify-center size-10 rounded-full hover:bg-white/5 active:bg-white/10 transition-colors text-slate-900 dark:text-slate-100">
+<span class="material-symbols-outlined" style="font-size: 24px;">arrow_back</span>
+</button>
+<h2 class="text-lg font-bold tracking-tight text-center">Récapitulatif de la Session</h2>
+<button class="flex items-center justify-center h-10 px-2 rounded-lg text-primary font-semibold text-sm hover:bg-primary/10 transition-colors">Modifier</button>
+</header>
+<!-- Scrollable Content -->
+<main class="flex-1 flex flex-col pb-24">
+<!-- Hero Section: Date & Time -->
+<div class="relative w-full bg-surface-darker/50 p-6 flex flex-col items-center justify-center gap-2 border-b border-primary/10">
+<!-- Background Map Texture Hint -->
+<div class="absolute inset-0 opacity-10 bg-[url('https://placeholder.pics/svg/400')] bg-repeat bg-center mix-blend-overlay pointer-events-none" data-alt="Subtle parchment map texture background"></div>
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 text-primary text-xs font-bold uppercase tracking-wider mb-2"><span class="material-symbols-outlined" style="font-size: 16px;">verified</span> Confirmé</div>
+<h1 class="text-4xl font-bold text-slate-900 dark:text-white text-center">Samedi 28 oct.</h1>
+<div class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-sm font-medium mt-1">
+<span class="material-symbols-outlined text-primary" style="font-size: 20px;">schedule</span>
+<span>6:00 PM - 10:00 PM</span>
+</div>
+<p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Meilleur choix pour 5 joueurs</p>
+</div>
+<!-- Location Card -->
+<div class="px-4 mt-6">
+<div class="bg-surface-dark rounded-xl overflow-hidden border border-primary/10 shadow-lg">
+<div class="h-32 w-full bg-cover bg-center relative" data-alt="Map showing location of the session" data-location="Seattle" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAMeARQJl932gixZTIr-6QiXel66OXzJevhwq9P1pdCjkzVGWb6YKkZQkTFFdAECZy6uFW8uGL1aSSctcSisYrQGHxhextcog3mWeJk3XxGucbkat3DBqTyQUT84NVNZvQH59ePfdURxTMHxzcAoxA9HxRaaVCTbIFh9eoKangVXQanqybTdAChg2vGbZtDXsFdQCRdUfM35Wesq9Y8wz6BUzjjCsaAvrW3cwWwUmv9jc517WwTHWng3mlxJiOU6bKT_MO3hEnzhAk");'>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dark to-transparent"></div>
+<div class="absolute bottom-3 left-4 flex items-center gap-2">
+<div class="bg-primary text-background-dark p-1.5 rounded-lg shadow-sm">
+<span class="material-symbols-outlined block" style="font-size: 20px;">location_on</span>
+</div>
+<div>
+<p class="text-white font-bold text-sm leading-tight">Sous-sol de Mike</p>
+<p class="text-slate-300 text-xs leading-tight">124 Allée du Dragon, Seattle</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Logistics Grid -->
+<div class="grid grid-cols-2 gap-4 px-4 mt-4">
+<!-- Food Plan -->
+<div class="bg-surface-dark p-4 rounded-xl border border-primary/10 flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="bg-orange-500/20 text-orange-400 p-2 rounded-lg w-fit">
+<span class="material-symbols-outlined" style="font-size: 24px;">local_pizza</span>
+</div>
+<span class="text-xs text-slate-500 font-medium">Repas</span>
+</div>
+<div>
+<p class="font-bold text-slate-900 dark:text-slate-100">Le Tombeau de la Liche</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Groupe de Niveau 5</p>
+</div>
+</div>
+<!-- DM Notes -->
+<div class="bg-surface-dark p-4 rounded-xl border border-primary/10 flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="bg-purple-500/20 text-purple-400 p-2 rounded-lg w-fit">
+<span class="material-symbols-outlined" style="font-size: 24px;">swords</span>
+</div>
+<span class="text-xs text-slate-500 font-medium">Campagne</span>
+</div>
+<div>
+<p class="font-bold text-slate-900 dark:text-slate-100">Le Tombeau de la Liche</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Groupe de Niveau 5</p>
+</div>
+</div>
+</div>
+<!-- Checklist -->
+<div class="px-4 mt-6">
+<div class="flex items-center justify-between mb-3">
+<h3 class="text-lg font-bold text-slate-900 dark:text-slate-100">À apporter</h3>
+<span class="text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded">3 articles</span>
+</div>
+<div class="bg-surface-dark rounded-xl border border-primary/10 divide-y divide-primary/5">
+<label class="flex items-center gap-3 p-4 cursor-pointer group">
+<input checked="" class="peer sr-only" type="checkbox"/>
+<div class="size-5 rounded border border-slate-500 peer-checked:bg-primary peer-checked:border-primary flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-background-dark opacity-0 peer-checked:opacity-100" style="font-size: 16px;">check</span>
+</div>
+<span class="text-slate-300 peer-checked:text-slate-500 peer-checked:line-through transition-colors">Fiche de personnage (Niv 5)</span>
+</label>
+<label class="flex items-center gap-3 p-4 cursor-pointer group">
+<input class="peer sr-only" type="checkbox"/>
+<div class="size-5 rounded border border-slate-500 peer-checked:bg-primary peer-checked:border-primary flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-background-dark opacity-0 peer-checked:opacity-100" style="font-size: 16px;">check</span>
+</div>
+<span class="text-slate-300 peer-checked:text-slate-500 peer-checked:line-through transition-colors">Set de dés</span>
+</label>
+<label class="flex items-center gap-3 p-4 cursor-pointer group">
+<input class="peer sr-only" type="checkbox"/>
+<div class="size-5 rounded border border-slate-500 peer-checked:bg-primary peer-checked:border-primary flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-background-dark opacity-0 peer-checked:opacity-100" style="font-size: 16px;">check</span>
+</div>
+<span class="text-slate-300 peer-checked:text-slate-500 peer-checked:line-through transition-colors">Snacks à partager</span>
+</label>
+</div>
+</div>
+<!-- Player Availability Summary -->
+<div class="px-4 mt-6">
+<h3 class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-3 uppercase tracking-wider">Statut du groupe</h3>
+<div class="flex -space-x-3 overflow-hidden p-1">
+<img alt="Player avatar" class="inline-block h-10 w-10 rounded-full ring-2 ring-background-dark object-cover" data-alt="Avatar of Player 1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCq2Bg9ZzJeDWFLG_glFQrqeKfcyz3mo-9TUOIW6cf6KkcVyjlZPviD-KDrlOqtuYIUHB__bfMpcKsAV-OZTT-UpF34Knx5Ck9yMVeR2p90cgewhUk4rk5v7AJ5Ji6mA6HKVPNDVQrHtQVNaGB5LDxiA-X4lUgBq1HuX5fJyOhASBmdJ2cx_pO9aX9e3LRWzC8wibpF4PoR-nbFvZjKDYWjfDuQ09AKJTvFk_lKNkAsF_58fIEBZ5yubhs5SfJNtDUWgXyHFD5-v9c"/>
+<img alt="Player avatar" class="inline-block h-10 w-10 rounded-full ring-2 ring-background-dark object-cover" data-alt="Avatar of Player 2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLGOW-u2Xvrfu6F5J-Ud8K23b-oQSww6aP0nu_TknQ0KmOu9K9Pl0GJE568eaAWAOIB4kZoIQp1xZOguxfWit26E-1R5y-8UnolnEoSIDFEAwY08_3IB7yomocsuy7K8CqqaelU_SQ_KhuOjQOc3BCwG8pt5uEV-dL0xRSiMWIKBwLZslPxPluHbO6qN0qydw4yBGdVLzf4vRw3p1uAgDoBc0g4CI1RcFcUVEryfXhrOZCyImgk0suQqVitQkyjkehIu_vR5PeqCM"/>
+<img alt="Player avatar" class="inline-block h-10 w-10 rounded-full ring-2 ring-background-dark object-cover" data-alt="Avatar of Player 3" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfi8VZiLDn2W8KTdO-hY2tqsGv8Ueco63asMFnh4S8K3DXjn_DAEcK06l61ZS9ch3AgBIPc6jKXjco3uY71zA5BC5nQg2iwGfqW3b5DRD5zUqC8wkFctmqaZ9niw5mw4BNNtZz31C41Ll0lJKVZxX4nPGB_5UiQUQbR4QBofIpKOOZgT_WwifykD99eVIhSB0Ql7qxhiQ4eT4YE3yvXyrmR773tvEKBIomB4AEGBVtQSLcee4onv5k0nciugWr4yk8DUXPXBqWSUA"/>
+<img alt="Player avatar" class="inline-block h-10 w-10 rounded-full ring-2 ring-background-dark object-cover" data-alt="Avatar of Player 4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7edhG9VciX0xTWxW1xT7YgRp99mKbnNcPTFeBDS8jEgZr5hQtiGIAWBB5ZKgQKDkDIouuNUaANCXb-lZsSHzS55FraSRH9r4UWvMbomtcrf37sU2W9eYpct95TnDdpllEZwh-9yCrcB6I1KtI9y_LG4B51faCV1iZvpe5x4YctBsyBxB_KeSSpKtUjbiv5vZpPMEc7KsWILoQSQcMLxgujMTdMPkbYylS6ROQGB5YoZPzDw6ZLIKzLfMNDNpa-UwZ69zq6wd0Tps"/>
+<div class="flex h-10 w-10 items-center justify-center rounded-full ring-2 ring-background-dark bg-surface-dark text-xs font-medium text-white">+1</div>
+</div>
+<p class="mt-2 text-sm text-primary">Les 5 joueurs ont confirmé pour samedi !</p>
+</div>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto border-t border-primary/10 bg-surface-dark/95 backdrop-blur-xl px-4 pb-6 pt-3 z-50">
+<div class="flex justify-between items-end">
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" style="font-size: 24px;">home</span>
+<span class="text-[10px] font-medium tracking-wide">Accueil</span>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-primary group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" style="font-size: 24px; font-variation-settings: 'FILL' 1;">calendar_month</span>
+<span class="text-[10px] font-medium tracking-wide">Session</span>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" style="font-size: 24px;">history</span>
+<span class="text-[10px] font-medium tracking-wide">Historique</span>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" style="font-size: 24px;">person</span>
+<span class="text-[10px] font-medium tracking-wide">Profil</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Validation de la Session - D&amp;D Organizer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#13ec5b",
+              "background-light": "#f6f8f6",
+              "background-dark": "#102216",
+              "card-dark": "#1a2e21",
+              "border-dark": "#2d4a36",
+            },
+            fontFamily: {
+              "display": ["Be Vietnam Pro", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      body {
+        font-family: "Be Vietnam Pro", sans-serif;
+      }
+      .magic-glow {
+        box-shadow: 0 0 15px rgba(19, 236, 91, 0.15);
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: #102216;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #2d4a36;
+        border-radius: 10px;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+<!-- Header / Top Bar -->
+<header class="flex items-center bg-background-light dark:bg-background-dark p-4 border-b border-slate-200 dark:border-border-dark sticky top-0 z-10">
+<div class="text-primary flex size-10 shrink-0 items-center justify-center cursor-pointer hover:bg-primary/10 rounded-full transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-tight flex-1 text-center pr-10">Validation de la Session</h2>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto custom-scrollbar pb-24">
+<!-- Hero Date Section -->
+<section class="px-4 py-8 text-center bg-gradient-to-b from-primary/5 to-transparent">
+<div class="mb-2 flex justify-center">
+<span class="material-symbols-outlined text-primary text-4xl">calendar_month</span>
+</div>
+<p class="text-primary text-sm font-medium uppercase tracking-widest mb-1">Date sélectionnée</p>
+<h1 class="text-slate-900 dark:text-slate-100 tracking-tight text-4xl font-bold leading-tight">Samedi 28 Octobre</h1>
+<div class="mt-4 flex justify-center gap-2 items-center text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<span class="text-sm font-medium">19:30 - 23:30</span>
+</div>
+</section>
+<!-- Form Content -->
+<div class="px-4 space-y-6 max-w-2xl mx-auto">
+<!-- Location Input -->
+<div class="space-y-2">
+<label class="block text-slate-900 dark:text-slate-100 text-base font-bold">Lieu de la session</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-slate-400">map</span>
+<input class="w-full pl-10 pr-4 py-3 bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-lg text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-slate-500" placeholder="L'Antre du Dragon (Adresse...)" type="text" value=""/>
+</div>
+<div class="w-full h-32 rounded-lg bg-slate-200 dark:bg-card-dark overflow-hidden relative border border-slate-200 dark:border-border-dark mt-2">
+<div class="absolute inset-0 bg-cover bg-center opacity-60" data-alt="A detailed fantasy style map of a city street" data-location="Paris" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC6UcPnL5HHMlg4zZQgfyptcUbCn0uX-aU3abtjPFXfsWg2Ay9kwEYL9ORZqAfm0BKAZalfJZ3_UbzLMwkvmDbZgojZhYyulDOWWo3yErRiXEImPkMMj7Pw1db3BUOVNFv_ygbgmQKlTaCnrqL-8nE63J7KWUeM7llDsF8GivDYzn8pnwfjHdBrLCK2MJHP8rw4TQXGBqYtv7xm5ya2kcClLVUKAmpN9jqzBYo_iqrdQNbIi2-McDrRI2Pec0XtYoldvDLOBQY6n24')"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="bg-primary/20 p-2 rounded-full border border-primary/50 text-primary">
+<span class="material-symbols-outlined">location_on</span>
+</span>
+</div>
+</div>
+</div>
+<!-- Logistics Section -->
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<h3 class="text-slate-900 dark:text-slate-100 text-lg font-bold">Logistique &amp; Préparations</h3>
+<span class="material-symbols-outlined text-primary">inventory_2</span>
+</div>
+<div class="bg-white dark:bg-card-dark p-4 rounded-xl border border-slate-200 dark:border-border-dark space-y-4 magic-glow">
+<div class="flex flex-col gap-3">
+<label class="text-sm font-medium text-slate-500 dark:text-slate-400">Ce que chaque joueur doit apporter :</label>
+<textarea class="w-full p-3 bg-slate-50 dark:bg-background-dark/50 border border-slate-200 dark:border-border-dark rounded-lg text-slate-900 dark:text-slate-100 focus:ring-1 focus:ring-primary outline-none resize-none transition-all" placeholder="Ex: Dés, fiches de perso, snacks salés, boissons..." rows="4"></textarea>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="flex items-center gap-2 p-2 rounded-lg bg-primary/5 border border-primary/20">
+<span class="material-symbols-outlined text-primary text-lg">casino</span>
+<span class="text-xs font-medium">Sets de dés</span>
+</div>
+<div class="flex items-center gap-2 p-2 rounded-lg bg-primary/5 border border-primary/20">
+<span class="material-symbols-outlined text-primary text-lg">restaurant</span>
+<span class="text-xs font-medium">Snacks &amp; Boissons</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="pt-4 flex flex-col gap-3">
+<button class="w-full bg-primary hover:bg-primary/90 text-background-dark font-bold py-4 rounded-xl shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transition-transform active:scale-95">
+<span class="material-symbols-outlined">send</span>
+                    Envoyer les Invitations
+                </button>
+<button class="w-full bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-colors">
+<span class="material-symbols-outlined">notifications_active</span>
+                    Programmer Rappels (Veille)
+                </button>
+</div>
+</div>
+</main>
+<!-- Navigation Bar -->
+<nav class="fixed bottom-0 w-full bg-background-light dark:bg-card-dark border-t border-slate-200 dark:border-border-dark px-4 pb-6 pt-2 z-20">
+<div class="flex justify-between items-center max-w-md mx-auto">
+<a class="flex flex-col items-center gap-1 text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-medium uppercase tracking-tighter">Accueil</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">swords</span>
+<span class="text-[10px] font-medium uppercase tracking-tighter">Session</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">history_edu</span>
+<span class="text-[10px] font-medium uppercase tracking-tighter">Historique</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">manage_accounts</span>
+<span class="text-[10px] font-medium uppercase tracking-tighter">Profil</span>
+</a>
+</div>
+</nav>
+</body></html>

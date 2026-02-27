@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Configuration de la Campagne</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&amp;family=Cinzel:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#13ec5b",
+              "primary-dark": "#0ea841",
+              "background-light": "#f6f8f6",
+              "background-dark": "#111813",
+              "surface-dark": "#1c271f",
+              "border-dark": "#28392e",
+              "text-secondary": "#9db9a6",
+            },
+            fontFamily: {
+              "display": ["Be Vietnam Pro", "sans-serif"],
+              "gothic": ["Cinzel", "serif"],
+            },
+            borderRadius: {
+              "DEFAULT": "0.25rem",
+              "lg": "0.5rem",
+              "xl": "0.75rem",
+              "full": "9999px"
+            },
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen flex flex-col">
+<!-- Header / Navigation -->
+<div class="sticky top-0 z-10 flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between border-b dark:border-border-dark border-gray-200">
+<button class="text-slate-900 dark:text-white flex size-12 shrink-0 items-center hover:bg-black/5 dark:hover:bg-white/5 rounded-full justify-center transition-colors">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<h2 class="text-slate-900 dark:text-white text-xl font-gothic font-bold leading-tight tracking-wide flex-1 text-center pr-12">Configuration de la Campagne</h2>
+</div>
+<!-- Main Content Scrollable Area -->
+<main class="flex-1 overflow-y-auto pb-24">
+<!-- Campaign Image/Banner -->
+<div class="relative w-full h-48 bg-surface-dark group">
+<img alt="Dark fantasy tabletop gaming atmosphere" class="w-full h-full object-cover opacity-60" data-alt="Dark fantasy tabletop gaming atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdlHgLmke59comHNI8yCQ5DYPP1giXtyth4fJSpylo9bwazRGX3bqrpRfo0tyTOo26x06otYco_BFha3dPLrSCo8lGk4l63LH7gO6XQG4Ne5L0zMz1h57PkpR4cGW_zJV1HTXypuyAA7xivV-fADbn-rXgrngJJflS_luCCMBHapprExORYSdyA51_rW8zF71ROnpEAJ4mjyt_alvUZAKjIyuADe3CLgpZIKh_5P96kqrwDXnu_9tAIFk259bNTRS1weB1U5KmrBM"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark to-transparent"></div>
+<button class="absolute bottom-4 right-4 bg-primary text-background-dark p-2 rounded-full shadow-lg hover:bg-primary-dark transition-colors">
+<span class="material-symbols-outlined">add_a_photo</span>
+</button>
+</div>
+<!-- Form Section -->
+<div class="px-4 py-6 space-y-8">
+<!-- Campaign Title -->
+<div class="space-y-2">
+<label class="block text-slate-900 dark:text-white text-base font-gothic font-bold tracking-wide">Nom de la Campagne</label>
+<input class="w-full rounded-xl border-gray-200 dark:border-border-dark bg-white dark:bg-surface-dark text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent h-14 px-4 placeholder:text-gray-400 dark:placeholder:text-text-secondary transition-all" placeholder="ex: La Malédiction de Strahd" type="text" value="Ombres sur la Porte de Baldur"/>
+</div>
+<!-- Session Schedule -->
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<h3 class="text-slate-900 dark:text-white font-gothic text-lg font-bold">Calendrier des Sessions</h3>
+<span class="text-xs font-medium text-primary uppercase tracking-wider">Sélectionner les Dates</span>
+</div>
+<div class="bg-white dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-border-dark p-4 shadow-sm">
+<!-- Calendar Header -->
+<div class="flex items-center justify-between mb-4">
+<button class="p-1 hover:bg-gray-100 dark:hover:bg-white/5 rounded-full">
+<span class="material-symbols-outlined text-text-secondary">chevron_left</span>
+</button>
+<p class="text-slate-900 dark:text-white text-base font-bold font-gothic">Octobre 2023</p>
+<button class="p-1 hover:bg-gray-100 dark:hover:bg-white/5 rounded-full">
+<span class="material-symbols-outlined text-text-secondary">chevron_right</span>
+</button>
+</div>
+<!-- Calendar Grid -->
+<div class="grid grid-cols-7 gap-y-2">
+<!-- Days Header -->
+<div class="text-center text-xs font-bold text-text-secondary py-2">D</div>
+<div class="text-center text-xs font-bold text-text-secondary py-2">L</div>
+<div class="text-center text-xs font-bold text-text-secondary py-2">M</div>
+<div class="text-center text-xs font-bold text-text-secondary py-2">M</div>
+<div class="text-center text-xs font-bold text-text-secondary py-2">J</div>
+<div class="text-center text-xs font-bold text-text-secondary py-2">V</div>
+<div class="text-center text-xs font-bold text-text-secondary py-2">S</div>
+<!-- Days -->
+<div class="col-start-4 flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-500 dark:text-slate-400">1</div>
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-500 dark:text-slate-400">2</div>
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-500 dark:text-slate-400">3</div>
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-500 dark:text-slate-400">4</div>
+<!-- Selected Day (Start) -->
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm bg-primary text-background-dark font-bold rounded-full shadow-[0_0_10px_rgba(19,236,91,0.4)]">5</div>
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-full cursor-pointer">6</div>
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-full cursor-pointer">7</div>
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-full cursor-pointer">8</div>
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-full cursor-pointer">9</div>
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-full cursor-pointer">10</div>
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-full cursor-pointer">11</div>
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-full cursor-pointer">12</div>
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-full cursor-pointer">13</div>
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-full cursor-pointer">14</div>
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-full cursor-pointer">15</div>
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-full cursor-pointer">16</div>
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-full cursor-pointer">17</div>
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-full cursor-pointer">18</div>
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-full cursor-pointer">19</div>
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-full cursor-pointer">20</div>
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-full cursor-pointer">21</div>
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-full cursor-pointer">22</div>
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-full cursor-pointer">23</div>
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-full cursor-pointer">24</div>
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-full cursor-pointer">25</div>
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-full cursor-pointer">26</div>
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-full cursor-pointer">27</div>
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-full cursor-pointer">28</div>
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-full cursor-pointer">29</div>
+<!-- Selected Day (End) -->
+<div class="flex items-center justify-center h-10 w-10 mx-auto text-sm bg-primary text-background-dark font-bold rounded-full shadow-[0_0_10px_rgba(19,236,91,0.4)]">30</div>
+</div>
+</div>
+</div>
+<!-- Additional Info (DM Notes) -->
+<div class="space-y-2">
+<label class="flex justify-between items-center text-slate-900 dark:text-white text-base font-gothic font-bold tracking-wide">
+<span>Infos Complémentaires</span>
+<span class="text-xs font-normal text-text-secondary font-display bg-surface-dark px-2 py-1 rounded">Réservé au MJ</span>
+</label>
+<div class="relative">
+<textarea class="w-full rounded-xl border-gray-200 dark:border-border-dark bg-white dark:bg-surface-dark text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent min-h-[140px] p-4 placeholder:text-gray-400 dark:placeholder:text-text-secondary resize-none transition-all leading-relaxed" placeholder="Accroches de scénario, noms de PNJ, ou notes de préparation..."></textarea>
+<div class="absolute bottom-3 right-3 flex gap-2">
+<button class="p-1 text-text-secondary hover:text-primary transition-colors" title="Joindre une Image">
+<span class="material-symbols-outlined text-lg">image</span>
+</button>
+<button class="p-1 text-text-secondary hover:text-primary transition-colors" title="Joindre une Carte">
+<span class="material-symbols-outlined text-lg">map</span>
+</button>
+</div>
+</div>
+<p class="text-xs text-text-secondary pl-1">Ces notes sont masquées pour les joueurs.</p>
+</div>
+<!-- Action Buttons -->
+<div class="pt-4 flex flex-col gap-3">
+<button class="w-full bg-primary hover:bg-primary-dark text-background-dark h-14 rounded-full font-bold text-lg shadow-[0_0_15px_rgba(19,236,91,0.3)] transition-all transform active:scale-95 flex items-center justify-center gap-2"><span class="material-symbols-outlined">campaign</span> Annoncer la Session</button>
+<button class="w-full bg-surface-dark border border-border-dark hover:bg-border-dark text-white h-14 rounded-full font-medium text-base transition-colors flex items-center justify-center gap-2"><span class="material-symbols-outlined">save</span> Enregistrer le Brouillon</button>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation -->
+<div class="flex w-full items-center justify-around border-t border-gray-200 dark:border-border-dark bg-background-light dark:bg-background-dark px-4 pb-6 pt-2 z-10">
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-primary" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined text-2xl">home</span>
+</div>
+<p class="text-[10px] font-medium">Accueil</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-text-secondary hover:text-primary transition-colors" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined text-2xl">calendar_today</span>
+</div>
+<p class="text-[10px] font-medium">Session</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-text-secondary hover:text-primary transition-colors" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined text-2xl">history</span>
+</div>
+<p class="text-[10px] font-medium">Historique</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-text-secondary hover:text-primary transition-colors" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined text-2xl">person</span>
+</div>
+<p class="text-[10px] font-medium">Profil</p>
+</a>
+</div>
+</body></html>
