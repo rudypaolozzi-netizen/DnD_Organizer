@@ -1,0 +1,159 @@
+/* ===== La Porte du Dragon — Global Styles ===== */
+
+/* Scrollbar */
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(19, 236, 91, 0.3); border-radius: 9999px; }
+
+/* Glows & Shadows */
+.magic-glow { box-shadow: 0 0 15px rgba(19, 236, 91, 0.15); }
+.magic-glow-strong { box-shadow: 0 0 25px rgba(19, 236, 91, 0.3); }
+.neon-text { text-shadow: 0 0 10px rgba(19, 236, 91, 0.5); }
+.card-glow { box-shadow: 0 0 20px rgba(19, 236, 91, 0.08), inset 0 1px 0 rgba(19, 236, 91, 0.1); }
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 15px rgba(19, 236, 91, 0.2); }
+  50% { box-shadow: 0 0 30px rgba(19, 236, 91, 0.4); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+.animate-slide-up { animation: slideUp 0.5s ease-out forwards; }
+.animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+
+/* Staggered animations */
+.stagger-1 { animation-delay: 0.05s; opacity: 0; }
+.stagger-2 { animation-delay: 0.1s; opacity: 0; }
+.stagger-3 { animation-delay: 0.15s; opacity: 0; }
+.stagger-4 { animation-delay: 0.2s; opacity: 0; }
+.stagger-5 { animation-delay: 0.25s; opacity: 0; }
+
+/* Button effects */
+.btn-primary {
+  background: #13ec5b;
+  color: #102216;
+  font-weight: 900;
+  padding: 14px 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(19, 236, 91, 0.35);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  font-family: "Be Vietnam Pro", sans-serif;
+  font-size: 15px;
+}
+.btn-primary:hover { background: #10d450; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(19, 236, 91, 0.45); }
+.btn-primary:active { transform: scale(0.97); }
+
+.btn-secondary {
+  background: rgba(19, 236, 91, 0.1);
+  color: #13ec5b;
+  font-weight: 700;
+  padding: 14px 24px;
+  border-radius: 12px;
+  border: 1px solid rgba(19, 236, 91, 0.3);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  cursor: pointer;
+  font-family: "Be Vietnam Pro", sans-serif;
+  font-size: 15px;
+}
+.btn-secondary:hover { background: rgba(19, 236, 91, 0.2); }
+.btn-secondary:active { transform: scale(0.97); }
+
+/* Input */
+.input-field {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(19, 236, 91, 0.2);
+  background: rgba(19, 236, 91, 0.05);
+  padding: 14px 16px;
+  color: #e2e8f0;
+  outline: none;
+  transition: all 0.2s ease;
+  font-family: "Be Vietnam Pro", sans-serif;
+  font-size: 14px;
+}
+.input-field::placeholder { color: #64748b; }
+.input-field:focus { border-color: #13ec5b; box-shadow: 0 0 0 2px rgba(19, 236, 91, 0.15); }
+
+.input-with-icon {
+  padding-left: 44px;
+}
+
+/* Cards */
+.card {
+  background: #1a3328;
+  border: 1px solid rgba(19, 236, 91, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+.card:hover { border-color: rgba(19, 236, 91, 0.25); }
+
+/* Nav active state */
+.nav-item.active { color: #13ec5b; }
+.nav-item.active .material-symbols-outlined {
+  font-variation-settings: 'FILL' 1;
+}
+
+/* Page transitions */
+#app > div {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Availability grid */
+.avail-cell {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.avail-cell.available { background: #13ec5b; border: 1px solid rgba(19, 236, 91, 0.5); }
+.avail-cell.unavailable { background: rgba(244, 63, 94, 0.7); border: 1px solid rgba(244, 63, 94, 0.5); }
+.avail-cell.unknown { background: rgba(19, 236, 91, 0.15); border: 1px solid rgba(19, 236, 91, 0.2); }
+.avail-cell:hover { transform: scale(1.15); }
+
+/* Topographic background pattern */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2313ec5b' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+#app { position: relative; z-index: 1; }
+
+/* Fix for safe area on mobile */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  #bottom-nav > div {
+    padding-bottom: calc(env(safe-area-inset-bottom) + 8px);
+  }
+}

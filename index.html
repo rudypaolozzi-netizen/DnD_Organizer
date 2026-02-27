@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html class="dark" lang="fr">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport" />
+  <title>La Porte du Dragon — D&D Organizer</title>
+  <meta name="description"
+    content="Organisez vos parties de Donjons & Dragons avec La Porte du Dragon. Gérez les disponibilités, les sessions et les campagnes." />
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin href="https://fonts.gstatic.com" rel="preconnect" />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;900&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" />
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#13ec5b",
+            "primary-dark": "#0ea841",
+            "background-light": "#f6f8f6",
+            "background-dark": "#102216",
+            "surface-dark": "#183025",
+            "card-dark": "#1a3328",
+            "border-dark": "#1e4030",
+            "text-secondary": "#8fa89a",
+          },
+          fontFamily: {
+            "display": ["Be Vietnam Pro", "sans-serif"],
+            "gothic": ["Be Vietnam Pro", "sans-serif"],
+          },
+          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- App CSS -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body class="bg-background-dark font-display text-slate-100 antialiased">
+
+  <!-- App Container -->
+  <div id="app" class="relative flex min-h-[100dvh] w-full max-w-lg mx-auto flex-col overflow-x-hidden">
+    <!-- Page content will be injected here -->
+  </div>
+
+  <!-- Bottom Navigation (hidden on login) -->
+  <nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 z-50 hidden">
+    <div
+      class="max-w-lg mx-auto flex items-center justify-around border-t border-primary/10 bg-background-dark/95 backdrop-blur-md px-4 pb-6 pt-2">
+      <a href="#dashboard" id="nav-dashboard"
+        class="nav-item flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 hover:text-primary transition-colors">
+        <span class="material-symbols-outlined" style="font-size:24px;">home</span>
+        <p class="text-[10px] font-bold uppercase tracking-tighter">Accueil</p>
+      </a>
+      <a href="#disponibilites" id="nav-disponibilites"
+        class="nav-item flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 hover:text-primary transition-colors">
+        <span class="material-symbols-outlined" style="font-size:24px;">event_available</span>
+        <p class="text-[10px] font-bold uppercase tracking-tighter">Session</p>
+      </a>
+      <a href="#historique" id="nav-historique"
+        class="nav-item flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 hover:text-primary transition-colors">
+        <span class="material-symbols-outlined" style="font-size:24px;">history</span>
+        <p class="text-[10px] font-bold uppercase tracking-tighter">Historique</p>
+      </a>
+      <a href="#profile" id="nav-profile"
+        class="nav-item flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 hover:text-primary transition-colors">
+        <span class="material-symbols-outlined" style="font-size:24px;">person</span>
+        <p class="text-[10px] font-bold uppercase tracking-tighter">Profil</p>
+      </a>
+    </div>
+  </nav>
+
+  <!-- JS Modules -->
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/pages/login.js"></script>
+  <script src="js/pages/dashboard.js"></script>
+  <script src="js/pages/disponibilites.js"></script>
+  <script src="js/pages/campaign-config.js"></script>
+  <script src="js/pages/profile.js"></script>
+  <script src="js/pages/session-recap.js"></script>
+  <script src="js/pages/session-validation.js"></script>
+  <script src="js/pages/historique.js"></script>
+  <script src="js/app.js"></script>
+</body>
+
+</html>
