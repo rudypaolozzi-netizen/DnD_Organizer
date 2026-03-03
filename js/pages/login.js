@@ -10,7 +10,7 @@ function renderLogin() {
         <img src="assets/images/hero_banner.png" alt="D&D dice scene" class="w-full h-48 object-cover"/>
         <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-background-dark to-transparent"></div>
         <!-- Dice icon -->
-        <div class="absolute bottom-[-20px] left-1/2 -translate-x-1/2 w-14 h-14 rounded-xl bg-primary/90 flex items-center justify-center shadow-lg border-2 border-background-dark">
+        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 w-14 h-14 rounded-xl bg-primary/90 flex items-center justify-center shadow-lg border-2 border-background-dark">
           <span class="material-symbols-outlined text-background-dark text-2xl">casino</span>
         </div>
       </div>
