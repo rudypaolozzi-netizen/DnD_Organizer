@@ -1,8 +1,8 @@
 // ===== Profil Aventurier =====
 function renderProfile() {
-    const user = getUser() || DEMO_USER;
+  const user = getUser() || {};
 
-    return `
+  return `
     <div class="flex flex-col min-h-[100dvh] pb-24">
       <!-- Header -->
       <div class="flex items-center justify-between px-4 py-4 bg-background-dark/95 backdrop-blur-md border-b border-primary/10 sticky top-0 z-10">
@@ -26,8 +26,8 @@ function renderProfile() {
               <span class="material-symbols-outlined text-sm">edit</span>
             </button>
           </div>
-          <h2 class="text-2xl font-black mt-4">${user.pseudo || "Valerius l'Ombre"}</h2>
-          <p class="text-primary text-sm font-bold uppercase tracking-widest mt-1">${user.classe || 'Paladin'} de Niveau ${user.level || 15}</p>
+          <h2 class="text-2xl font-black mt-4">${user.pseudo || "Aventurier Inconnu"}</h2>
+          <p class="text-primary text-sm font-bold uppercase tracking-widest mt-1">${user.role === 'mj' ? 'Maître du Jeu' : 'Joueur'}</p>
         </div>
 
         <!-- Profile Form -->
@@ -41,7 +41,7 @@ function renderProfile() {
                 <span class="material-symbols-outlined text-primary text-lg">badge</span>
                 Nom de Héros (Pseudo)
               </label>
-              <input type="text" id="profile-pseudo" class="input-field" value="${user.pseudo || "Valerius l'Ombre"}" placeholder="Votre pseudo"/>
+              <input type="text" id="profile-pseudo" class="input-field" value="${user.pseudo || ''}" placeholder="Votre pseudo"/>
             </div>
 
             <!-- Email -->
@@ -50,22 +50,10 @@ function renderProfile() {
                 <span class="material-symbols-outlined text-primary text-lg">mail</span>
                 Adresse de Messagerie (Email)
               </label>
-              <input type="email" id="profile-email" class="input-field" value="${user.email || 'valerius@royaume.fr'}" placeholder="votre@email.fr"/>
+              <input type="email" id="profile-email" class="input-field" value="${user.email || ''}" placeholder="votre@email.fr" readonly/>
             </div>
-
-            <!-- Password -->
-            <div class="flex flex-col gap-2">
-              <label class="text-sm font-bold flex items-center gap-2 text-slate-300">
-                <span class="material-symbols-outlined text-primary text-lg">lock</span>
-                Mot de Passe Arcane
-              </label>
-              <div class="relative">
-                <input type="password" id="profile-password" class="input-field pr-12" value="motdepassesecret" placeholder="••••••••••••"/>
-                <button onclick="togglePasswordVisibility('profile-password', this)" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors">
-                  <span class="material-symbols-outlined">visibility_off</span>
-                </button>
-              </div>
-            </div>
+            
+            <p class="text-xs text-text-secondary italic">L'adresse email ne peut pas être modifiée ici.</p>
           </div>
 
           <!-- Save Button -->
@@ -92,13 +80,26 @@ function renderProfile() {
   `;
 }
 
-function saveProfile() {
-    const pseudo = document.getElementById('profile-pseudo')?.value;
-    const email = document.getElementById('profile-email')?.value;
-    if (currentUser) {
-        currentUser.pseudo = pseudo;
-        currentUser.email = email;
-        localStorage.setItem('dnd_user', JSON.stringify(currentUser));
+async function saveProfile() {
+  const pseudo = document.getElementById('profile-pseudo')?.value;
+
+  if (currentUser && currentUser.id) {
+    // Update in Supabase
+    const { error } = await supabaseClient
+      .from('profiles')
+      .update({ pseudo })
+      .eq('user_id', currentUser.id);
+
+    if (error) {
+      showToast('❌ Erreur lors de la mise à jour...');
+      return;
     }
+
+    currentUser.pseudo = pseudo;
+    localStorage.setItem('dnd_user', JSON.stringify(currentUser));
     showToast('✨ Profil mis à jour !');
+    render(); // Re-render to update the name at top
+  } else {
+    showToast('❌ Vous n\'êtes pas connecté !');
+  }
 }

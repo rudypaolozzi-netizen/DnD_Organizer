@@ -1,20 +1,5 @@
 // ===== Disponibilités du Groupe =====
 
-// Demo data for availability — all default to unavailable (red)
-const DEMO_PLAYERS = [
-  { name: 'Moi (MJ)', isSelf: true, avail: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]] },
-  { name: 'Grog Ironfist', isSelf: false, avail: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]] },
-  { name: 'Lyra Moonwhisper', isSelf: false, avail: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]] },
-  { name: 'Borg the Bard', isSelf: false, avail: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]] },
-];
-
-const DAYS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
-const DAY_NUMBERS = [15, 16, 17, 18, 19, 20, 21];
-const SLOTS = ['14-18h', 'Soir'];
-
-// My availability state — default all unavailable
-let myAvailability = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
 function renderDisponibilites() {
   return `
     <div class="flex flex-col min-h-[100dvh] pb-24">
@@ -26,153 +11,16 @@ function renderDisponibilites() {
         <h1 class="text-xl font-bold text-center flex-1 pr-10">Disponibilités du Groupe</h1>
       </div>
 
-      <div class="flex-1 overflow-y-auto hide-scrollbar px-4 py-6">
-        <!-- Campaign Info -->
-        <div class="flex items-center gap-3 mb-6 animate-fade-in">
-          <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center border border-primary/30">
-            <span class="material-symbols-outlined text-primary">fort</span>
+      <div class="flex-1 overflow-y-auto hide-scrollbar px-4 py-8 flex flex-col items-center justify-center">
+        <!-- Empty State -->
+        <div class="card p-8 flex flex-col items-center justify-center text-center w-full max-w-sm mx-auto animate-fade-in stagger-1">
+          <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-primary text-4xl">event_busy</span>
           </div>
-          <div>
-            <h2 class="text-xl font-bold">Campagne : L'Ombre d'Eldoria</h2>
-            <p class="text-sm text-text-secondary">Semaine du 15 au 21 Mai</p>
-          </div>
+          <h2 class="text-lg font-bold mb-2">Aucune campagne trouvée</h2>
+          <p class="text-text-secondary text-sm">Le Maître du Jeu n'a pas encore créé de campagne pour vous permettre de configurer vos disponibilités.</p>
         </div>
-
-        <!-- Scroll hint -->
-        <div class="flex items-center justify-center gap-2 mb-2 text-text-secondary text-xs animate-fade-in stagger-1">
-          <span class="material-symbols-outlined text-sm">swipe</span>
-          <span>Glissez ou utilisez les flèches pour naviguer</span>
-        </div>
-
-        <!-- Availability Table with Scroll Arrows -->
-        <div class="relative animate-fade-in stagger-1">
-          
-          <!-- Table container -->
-          <div class="overflow-x-auto hide-scrollbar rounded-xl border border-primary/10" id="avail-scroll-container">
-            <table class="w-full border-collapse min-w-[700px]" id="avail-table">
-              <thead>
-                <!-- Day headers row WITH arrows embedded -->
-                <tr class="bg-surface-dark">
-                  <th class="p-2 text-left text-xs font-bold uppercase tracking-wider border-b border-primary/20 sticky left-0 bg-surface-dark z-20 min-w-[120px]">
-                    <div class="flex items-center justify-between">
-                      <span>Joueurs</span>
-                      <!-- Left Arrow inside the header -->
-                      <button onclick="scrollAvailTable(-200)" class="w-7 h-7 rounded-full bg-primary/90 text-background-dark flex items-center justify-center shadow-lg hover:bg-primary transition-all active:scale-90 ml-1 flex-shrink-0">
-                        <span class="material-symbols-outlined" style="font-size:18px;">chevron_left</span>
-                      </button>
-                    </div>
-                  </th>
-                  ${DAYS.map((d, i) => `
-                    <th class="p-3 text-center text-xs font-bold uppercase tracking-wider border-b border-l border-primary/20" colspan="2">
-                      ${d}<br/><span class="text-[10px] font-medium text-text-secondary">${DAY_NUMBERS[i]}</span>
-                    </th>
-                  `).join('')}
-                  <!-- Right Arrow as last column header -->
-                  <th class="p-2 border-b border-l border-primary/20 bg-surface-dark sticky right-0 z-20 w-[40px]">
-                    <button onclick="scrollAvailTable(200)" class="w-7 h-7 rounded-full bg-primary/90 text-background-dark flex items-center justify-center shadow-lg hover:bg-primary transition-all active:scale-90">
-                      <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
-                    </button>
-                  </th>
-                </tr>
-                <!-- Slot sub-headers -->
-                <tr class="bg-surface-dark/80">
-                  <th class="p-1 border-b border-primary/10 sticky left-0 bg-surface-dark/80 z-20"></th>
-                  ${DAYS.map(() => `
-                    <th class="p-1 text-center border-b border-primary/10 text-[8px] text-text-secondary">14-18h</th>
-                    <th class="p-1 text-center border-b border-l border-primary/10 text-[8px] text-text-secondary">Soir</th>
-                  `).join('')}
-                  <th class="p-1 border-b border-primary/10 sticky right-0 bg-surface-dark/80 z-20"></th>
-                </tr>
-              </thead>
-              <tbody>
-                ${renderAvailRows()}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Legend -->
-        <div class="card p-4 mt-6 animate-fade-in stagger-2">
-          <div class="flex items-center gap-2 mb-3">
-            <span class="material-symbols-outlined text-primary text-lg">info</span>
-            <h3 class="font-bold">Légende</h3>
-          </div>
-          <div class="flex items-center gap-6">
-            <div class="flex items-center gap-2">
-              <div class="w-5 h-5 rounded bg-primary"></div>
-              <span class="text-xs">Disponible</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <div class="w-5 h-5 rounded bg-rose-500/80"></div>
-              <span class="text-xs">Indisponible</span>
-            </div>
-          </div>
-          <p class="text-[10px] mt-3 text-text-secondary">Cliquez sur vos propres cases pour basculer entre Disponible (Vert) et Indisponible (Rouge).</p>
-        </div>
-      </div>
-
-      <!-- Save Button -->
-      <div class="px-4 pb-4">
-        <button onclick="saveAvailability()" class="btn-primary animate-fade-in stagger-3">
-          <span class="material-symbols-outlined">save</span>
-          Enregistrer mes disponibilités
-        </button>
       </div>
     </div>
   `;
-}
-
-function renderAvailRows() {
-  return DEMO_PLAYERS.map((player, pi) => {
-    const cells = [];
-    for (let d = 0; d < 7; d++) {
-      for (let s = 0; s < 2; s++) {
-        const idx = d * 2 + s;
-        const isAvail = pi === 0 ? myAvailability[idx] : (player.avail[0][idx] || 0);
-        const cls = isAvail ? 'available' : 'unavailable';
-        const clickable = pi === 0 ? `onclick="toggleMyAvail(${idx})"` : '';
-        const borderL = s === 1 ? 'border-l border-primary/10' : '';
-        cells.push(`<td class="p-2 ${borderL}"><div class="avail-cell ${cls} mx-auto" ${clickable}></div></td>`);
-      }
-    }
-    const nameClass = player.isSelf ? 'text-primary font-bold' : '';
-    const bgClass = pi === 0 ? 'bg-[#142e1f]' : 'bg-background-dark';
-    return `
-      <tr class="${pi === 0 ? 'bg-primary/5' : ''}">
-        <td class="p-3 text-sm sticky left-0 ${bgClass} z-20 border-r border-primary/20 ${nameClass}" style="background-color: ${pi === 0 ? '#142e1f' : '#102216'};">${player.name}</td>
-        ${cells.join('')}
-        <td class="sticky right-0 z-20 w-[40px]" style="background-color: ${pi === 0 ? '#142e1f' : '#102216'};"></td>
-      </tr>
-    `;
-  }).join('');
-}
-
-function toggleMyAvail(idx) {
-  myAvailability[idx] = myAvailability[idx] ? 0 : 1;
-  const tbody = document.querySelector('#avail-table tbody');
-  if (tbody) tbody.innerHTML = renderAvailRows();
-}
-
-// Scroll the availability table left or right
-function scrollAvailTable(amount) {
-  const container = document.getElementById('avail-scroll-container');
-  if (container) {
-    container.scrollBy({ left: amount, behavior: 'smooth' });
-  }
-}
-
-function saveAvailability() {
-  showToast('Disponibilités enregistrées ! ✨');
-}
-
-function showToast(message) {
-  const toast = document.createElement('div');
-  toast.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-primary text-background-dark font-bold px-6 py-3 rounded-xl shadow-lg z-[100] animate-slide-up';
-  toast.textContent = message;
-  document.body.appendChild(toast);
-  setTimeout(() => {
-    toast.style.opacity = '0';
-    toast.style.transition = 'opacity 0.3s';
-    setTimeout(() => toast.remove(), 300);
-  }, 2500);
 }

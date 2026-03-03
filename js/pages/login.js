@@ -1,6 +1,6 @@
 // ===== Login Page =====
 function renderLogin() {
-    return `
+  return `
     <div class="flex flex-col min-h-[100dvh] px-6 py-8">
       <!-- Title -->
       <h1 class="text-2xl font-black text-center text-primary neon-text mb-6 animate-fade-in">La Porte du Dragon</h1>
@@ -113,58 +113,64 @@ function renderLogin() {
 }
 
 function showRegisterForm() {
-    document.getElementById('login-form').classList.add('hidden');
-    document.getElementById('register-form').classList.remove('hidden');
+  document.getElementById('login-form').classList.add('hidden');
+  document.getElementById('register-form').classList.remove('hidden');
 }
 
 function showLoginForm() {
-    document.getElementById('register-form').classList.add('hidden');
-    document.getElementById('login-form').classList.remove('hidden');
+  document.getElementById('register-form').classList.add('hidden');
+  document.getElementById('login-form').classList.remove('hidden');
 }
 
 function togglePasswordVisibility(inputId, btn) {
-    const input = document.getElementById(inputId);
-    const icon = btn.querySelector('.material-symbols-outlined');
-    if (input.type === 'password') {
-        input.type = 'text';
-        icon.textContent = 'visibility';
-    } else {
-        input.type = 'password';
-        icon.textContent = 'visibility_off';
-    }
+  const input = document.getElementById(inputId);
+  const icon = btn.querySelector('.material-symbols-outlined');
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.textContent = 'visibility';
+  } else {
+    input.type = 'password';
+    icon.textContent = 'visibility_off';
+  }
 }
 
 async function handleLogin(role) {
-    const email = document.getElementById('login-email').value || 'demo@dragon.fr';
-    const password = document.getElementById('login-password').value || 'demo123';
-    const errorEl = document.getElementById('login-error');
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+  const errorEl = document.getElementById('login-error');
 
-    const result = await signIn(email, password, role);
-    if (result.success) {
-        navigateTo('dashboard');
-    } else {
-        errorEl.textContent = result.error || 'Échec de connexion';
-        errorEl.classList.remove('hidden');
-    }
+  if (!email || !password) {
+    errorEl.textContent = 'Veuillez remplir tous les champs';
+    errorEl.classList.remove('hidden');
+    return;
+  }
+
+  const result = await signIn(email, password, role);
+  if (result.success) {
+    navigateTo('dashboard');
+  } else {
+    errorEl.textContent = result.error || 'Échec de connexion';
+    errorEl.classList.remove('hidden');
+  }
 }
 
 async function handleRegister(role) {
-    const pseudo = document.getElementById('reg-pseudo').value;
-    const email = document.getElementById('reg-email').value;
-    const password = document.getElementById('reg-password').value;
-    const errorEl = document.getElementById('register-error');
+  const pseudo = document.getElementById('reg-pseudo').value;
+  const email = document.getElementById('reg-email').value;
+  const password = document.getElementById('reg-password').value;
+  const errorEl = document.getElementById('register-error');
 
-    if (!pseudo || !email || !password) {
-        errorEl.textContent = 'Veuillez remplir tous les champs';
-        errorEl.classList.remove('hidden');
-        return;
-    }
+  if (!pseudo || !email || !password) {
+    errorEl.textContent = 'Veuillez remplir tous les champs';
+    errorEl.classList.remove('hidden');
+    return;
+  }
 
-    const result = await signUp(email, password, pseudo, role);
-    if (result.success) {
-        navigateTo('dashboard');
-    } else {
-        errorEl.textContent = result.error || "Échec de l'inscription";
-        errorEl.classList.remove('hidden');
-    }
+  const result = await signUp(email, password, pseudo, role);
+  if (result.success) {
+    navigateTo('dashboard');
+  } else {
+    errorEl.textContent = result.error || "Échec de l'inscription";
+    errorEl.classList.remove('hidden');
+  }
 }

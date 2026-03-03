@@ -1,9 +1,9 @@
 // ===== Dashboard / Grimoire de Session =====
 function renderDashboard() {
-    const user = getUser();
-    const userRole = user ? user.role : 'joueur';
+  const user = getUser();
+  const userRole = user ? user.role : 'joueur';
 
-    return `
+  return `
     <div class="flex flex-col min-h-[100dvh] pb-24">
       <!-- Header -->
       <div class="flex items-center justify-between px-4 py-4 sticky top-0 bg-background-dark/95 backdrop-blur-md z-10 border-b border-primary/10">
@@ -24,46 +24,13 @@ function renderDashboard() {
               <span class="w-1 h-6 bg-primary rounded-full inline-block"></span>
               Parties à Venir
             </h2>
-            <span class="text-xs font-medium text-primary bg-primary/10 px-3 py-1 rounded-full">2 Prévues</span>
+            <span class="text-xs font-medium text-text-secondary bg-surface-dark px-3 py-1 rounded-full">Aucune prévue</span>
           </div>
           
-          <!-- Session Card 1 -->
-          <a href="#session-recap" class="card mb-4 flex overflow-hidden animate-slide-up stagger-1 cursor-pointer group">
-            <div class="w-32 h-full min-h-[140px] flex-shrink-0">
-              <img src="assets/images/session_1.png" alt="Fortress" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"/>
-            </div>
-            <div class="p-4 flex-1">
-              <h3 class="font-bold text-base leading-tight">Le Fléau d'Ombreterre</h3>
-              <div class="flex items-center gap-1 mt-2 text-primary text-xs font-medium">
-                <span class="material-symbols-outlined text-sm">event</span>
-                15 Octobre, 20h00
-              </div>
-              <div class="flex items-center gap-1 mt-1 text-primary text-xs">
-                <span class="material-symbols-outlined text-sm">location_on</span>
-                La Taverne du Corbeau
-              </div>
-              <p class="text-text-secondary text-xs mt-2 line-clamp-2 italic">"Infiltration de la forteresse ennemie sous la nouvelle lune...."</p>
-            </div>
-          </a>
-
-          <!-- Session Card 2 -->
-          <a href="#session-recap" class="card flex overflow-hidden animate-slide-up stagger-2 cursor-pointer group">
-            <div class="w-32 h-full min-h-[140px] flex-shrink-0">
-              <img src="assets/images/session_2.png" alt="Mines" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"/>
-            </div>
-            <div class="p-4 flex-1">
-              <h3 class="font-bold text-base leading-tight">Les Mines de Phandalin</h3>
-              <div class="flex items-center gap-1 mt-2 text-primary text-xs font-medium">
-                <span class="material-symbols-outlined text-sm">event</span>
-                22 Octobre, 19h30
-              </div>
-              <div class="flex items-center gap-1 mt-1 text-primary text-xs">
-                <span class="material-symbols-outlined text-sm">location_on</span>
-                Chez Antoine
-              </div>
-              <p class="text-text-secondary text-xs mt-2 line-clamp-2 italic">"Nettoyage du premier niveau et rencontre avec le gobelin..."</p>
-            </div>
-          </a>
+          <div class="card p-6 flex flex-col items-center justify-center text-center text-text-secondary animate-slide-up stagger-1">
+            <span class="material-symbols-outlined text-4xl mb-2 opacity-50">event_busy</span>
+            <p>Aucune partie prévue. Le MJ n'a pas encore créé de session.</p>
+          </div>
         </div>
 
         <!-- MJ Actions -->
@@ -89,14 +56,11 @@ function renderDashboard() {
               <span class="w-1 h-6 bg-primary rounded-full inline-block"></span>
               Historique des Parties
             </h2>
-            <a href="#historique" class="text-text-secondary text-sm hover:text-primary transition-colors">Voir tout</a>
           </div>
           
-          <!-- Past Session Items -->
-          <div class="space-y-3">
-            ${renderPastSession('Le Serment de la Rose Sanglante', 'Victoire amère contre le nécromancien Malakor.', '01', 'OCT')}
-            ${renderPastSession("Évasion de Port-Noir", "Fuite réussie par les égoûts après l'incendie du port.", '24', 'SEPT')}
-            ${renderPastSession("Les Plaines d'Argent", "Exploration des monolithes anciens. Découverte de la carte.", '10', 'SEPT')}
+          <div class="card p-6 flex flex-col items-center justify-center text-center text-text-secondary">
+            <span class="material-symbols-outlined text-4xl mb-2 opacity-50">history</span>
+            <p>Aucune partie passée pour l'instant.</p>
           </div>
         </div>
       </div>
@@ -105,7 +69,7 @@ function renderDashboard() {
 }
 
 function renderPastSession(title, description, day, month) {
-    return `
+  return `
     <div class="card p-4 flex items-center gap-4 cursor-pointer hover:border-primary/30 transition-all group">
       <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
         <span class="material-symbols-outlined text-primary">history</span>
