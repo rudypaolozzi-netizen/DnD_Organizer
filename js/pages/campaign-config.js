@@ -1,13 +1,15 @@
 // ===== Configuration de la Campagne (MJ) =====
 
-let selectedDates = [5, 30]; // Pre-selected dates
-let currentMonth = 9; // October (0-indexed)
-let currentYear = 2023;
+let selectedDates = [];
+const today = new Date();
+let currentMonth = today.getMonth();
+let currentYear = today.getFullYear();
+let activeCampaign = null; // Global variable to store the campaign
 
 const MONTH_NAMES = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 
 function renderCampaignConfig() {
-    return `
+  return `
     <div class="flex flex-col min-h-[100dvh] pb-24">
       <!-- Header -->
       <div class="flex items-center px-4 py-4 bg-background-dark/95 backdrop-blur-md border-b border-primary/10 sticky top-0 z-10">
@@ -22,16 +24,13 @@ function renderCampaignConfig() {
         <div class="relative animate-fade-in">
           <img src="assets/images/session_1.png" alt="Campaign banner" class="w-full h-48 object-cover"/>
           <div class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background-dark to-transparent"></div>
-          <button class="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-primary flex items-center justify-center shadow-lg hover:bg-primary-dark transition-colors">
-            <span class="material-symbols-outlined text-background-dark">add_a_photo</span>
-          </button>
         </div>
 
         <div class="px-4 py-6 space-y-8">
           <!-- Campaign Name -->
           <div class="space-y-2 animate-fade-in stagger-1">
             <label class="block text-base font-gothic font-bold tracking-wide uppercase">Nom de la Campagne</label>
-            <input type="text" class="input-field" value="Ombres sur la Porte de Baldur" placeholder="Nom de votre campagne"/>
+            <input type="text" id="campaign-name" class="input-field" value="" placeholder="Nom de votre campagne"/>
           </div>
 
           <!-- Calendar -->
@@ -83,13 +82,13 @@ function renderCampaignConfig() {
 }
 
 function renderCalendar() {
-    const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-    const startOffset = firstDay === 0 ? 6 : firstDay - 1; // Mon=0
+  const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const startOffset = firstDay === 0 ? 6 : firstDay - 1; // Mon=0
 
-    const dayHeaders = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
+  const dayHeaders = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
 
-    let html = `
+  let html = `
     <div class="flex items-center justify-between mb-4">
       <button onclick="changeMonth(-1)" class="p-1 hover:bg-white/5 rounded-full transition-colors">
         <span class="material-symbols-outlined text-text-secondary">chevron_left</span>
@@ -103,54 +102,64 @@ function renderCalendar() {
       ${dayHeaders.map(d => `<div class="text-center text-xs font-bold text-text-secondary py-2">${d}</div>`).join('')}
   `;
 
-    // Empty cells before start
-    const sundayStart = firstDay; // 0=Sun
-    for (let i = 0; i < sundayStart; i++) {
-        html += '<div></div>';
-    }
+  // Empty cells before start
+  const sundayStart = firstDay; // 0=Sun
+  for (let i = 0; i < sundayStart; i++) {
+    html += '<div></div>';
+  }
 
-    for (let d = 1; d <= daysInMonth; d++) {
-        const isSelected = selectedDates.includes(d);
-        const cls = isSelected
-            ? 'bg-primary text-background-dark font-bold'
-            : 'text-white hover:bg-white/5';
-        html += `
+  for (let d = 1; d <= daysInMonth; d++) {
+    const isSelected = selectedDates.includes(d);
+    const cls = isSelected
+      ? 'bg-primary text-background-dark font-bold'
+      : 'text-white hover:bg-white/5';
+    html += `
       <div class="flex items-center justify-center">
         <button onclick="toggleCalDate(${d})" class="h-10 w-10 rounded-full ${cls} text-sm cursor-pointer transition-all flex items-center justify-center">${d}</button>
       </div>
     `;
-    }
+  }
 
-    html += '</div>';
-    return html;
+  html += '</div>';
+  return html;
 }
 
 function changeMonth(delta) {
-    currentMonth += delta;
-    if (currentMonth > 11) { currentMonth = 0; currentYear++; }
-    if (currentMonth < 0) { currentMonth = 11; currentYear--; }
-    selectedDates = [];
-    const container = document.getElementById('calendar-container');
-    if (container) container.innerHTML = renderCalendar();
+  currentMonth += delta;
+  if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+  if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+  selectedDates = [];
+  const container = document.getElementById('calendar-container');
+  if (container) container.innerHTML = renderCalendar();
 }
 
 function toggleCalDate(day) {
-    const idx = selectedDates.indexOf(day);
-    if (idx > -1) selectedDates.splice(idx, 1);
-    else selectedDates.push(day);
-    const container = document.getElementById('calendar-container');
-    if (container) container.innerHTML = renderCalendar();
+  const idx = selectedDates.indexOf(day);
+  if (idx > -1) selectedDates.splice(idx, 1);
+  else selectedDates.push(day);
+  const container = document.getElementById('calendar-container');
+  if (container) container.innerHTML = renderCalendar();
 }
 
 function announceSession() {
-    if (selectedDates.length === 0) {
-        showToast('⚠️ Sélectionnez au moins une date !');
-        return;
-    }
-    showToast('📢 Session annoncée aux joueurs !');
-    setTimeout(() => navigateTo('session-validation'), 1000);
+  const campaignName = document.getElementById('campaign-name').value || 'Nouvelle Campagne';
+  if (selectedDates.length === 0) {
+    showToast('⚠️ Sélectionnez au moins une date !');
+    return;
+  }
+
+  // Create active campaign
+  activeCampaign = {
+    name: campaignName,
+    dates: selectedDates,
+    month: currentMonth,
+    year: currentYear
+  };
+
+  showToast('📢 Notification push envoyée. Un email a été envoyé aux joueurs pour valider leurs disponibilités.');
+  setTimeout(() => navigateTo('disponibilites'), 2000);
 }
 
 function saveDraft() {
-    showToast('📝 Brouillon enregistré !');
+  showToast('📝 Brouillon enregistré !');
 }
