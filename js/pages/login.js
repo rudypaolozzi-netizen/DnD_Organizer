@@ -25,19 +25,23 @@ function renderLogin() {
       <div id="login-form" class="space-y-5 animate-fade-in stagger-3">
         <!-- Identity -->
         <div>
-          <label class="text-sm font-bold mb-2 block">Identité</label>
+          <label class="text-sm font-bold mb-2 flex items-center gap-2">
+            <span class="material-symbols-outlined text-text-secondary text-xl">person</span>
+            Identité
+          </label>
           <div class="relative">
-            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary text-xl">person</span>
-            <input type="email" id="login-email" class="input-field input-with-icon" placeholder="Nom d'utilisateur ou Email"/>
+            <input type="email" id="login-email" class="input-field" placeholder="Nom d'utilisateur ou Email"/>
           </div>
         </div>
         
         <!-- Password -->
         <div>
-          <label class="text-sm font-bold mb-2 block">Mot Secret</label>
+          <label class="text-sm font-bold mb-2 flex items-center gap-2">
+            <span class="material-symbols-outlined text-text-secondary text-xl">key</span>
+            Mot Secret
+          </label>
           <div class="relative">
-            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary text-xl">key</span>
-            <input type="password" id="login-password" class="input-field input-with-icon pr-12" placeholder="Mot de passe"/>
+            <input type="password" id="login-password" class="input-field pr-12" placeholder="Mot de passe"/>
             <button onclick="togglePasswordVisibility('login-password', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary hover:text-primary transition-colors">
               <span class="material-symbols-outlined text-xl">visibility_off</span>
             </button>
@@ -72,24 +76,30 @@ function renderLogin() {
       <!-- Register Form (hidden) -->
       <div id="register-form" class="space-y-5 hidden">
         <div>
-          <label class="text-sm font-bold mb-2 block">Nom de Héros</label>
+          <label class="text-sm font-bold mb-2 flex items-center gap-2">
+            <span class="material-symbols-outlined text-text-secondary text-xl">badge</span>
+            Nom de Héros
+          </label>
           <div class="relative">
-            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary text-xl">badge</span>
-            <input type="text" id="reg-pseudo" class="input-field input-with-icon" placeholder="Votre pseudo d'aventurier"/>
+            <input type="text" id="reg-pseudo" class="input-field" placeholder="Votre pseudo d'aventurier"/>
           </div>
         </div>
         <div>
-          <label class="text-sm font-bold mb-2 block">Email</label>
+          <label class="text-sm font-bold mb-2 flex items-center gap-2">
+            <span class="material-symbols-outlined text-text-secondary text-xl">mail</span>
+            Email
+          </label>
           <div class="relative">
-            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary text-xl">mail</span>
-            <input type="email" id="reg-email" class="input-field input-with-icon" placeholder="votre@email.fr"/>
+            <input type="email" id="reg-email" class="input-field" placeholder="votre@email.fr"/>
           </div>
         </div>
         <div>
-          <label class="text-sm font-bold mb-2 block">Mot Secret</label>
+          <label class="text-sm font-bold mb-2 flex items-center gap-2">
+            <span class="material-symbols-outlined text-text-secondary text-xl">key</span>
+            Mot Secret
+          </label>
           <div class="relative">
-            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary text-xl">key</span>
-            <input type="password" id="reg-password" class="input-field input-with-icon" placeholder="Minimum 6 caractères"/>
+            <input type="password" id="reg-password" class="input-field" placeholder="Minimum 6 caractères"/>
           </div>
         </div>
         <div id="register-error" class="hidden text-red-400 text-sm text-center bg-red-500/10 p-3 rounded-lg"></div>
