@@ -213,21 +213,22 @@ function renderAvailRows(dates) {
   const user = getUser();
   const userId = user ? user.id : null;
 
-  // Combine real players
   return playersData.map((player, pi) => {
-    const isSelf = player.user_id === userId;
+    // Robust check for self: compare current user id to profile user_id
+    const isSelf = player.user_id === userId || (user && player.user_id === user.user_id);
     const displayName = isSelf ? player.pseudo + ' (Moi)' : player.pseudo;
     const cells = [];
     
     dates.forEach((date, dateIndex) => {
       const key = `${activeCampaign.year}-${activeCampaign.month}-${date}`;
       for (let s = 0; s < 2; s++) { // 0=Aprem, 1=Soir
-        // If it's the current user, use myAvailability. Otherwise, show 0 (unavailable) as it's just a mockup for other players
+        // Use myAvailability if it's the current user, or dummy 0 otherwise
         const isAvail = isSelf ? (myAvailability[key] ? myAvailability[key][s] : 0) : 0;
         const cls = isAvail ? 'available' : 'unavailable';
         const clickable = isSelf ? `onclick="toggleMyAvail('${key}', ${s})"` : '';
+        const cursorCls = isSelf ? 'cursor-pointer hover:scale-105 active:scale-95' : 'opacity-80';
         const borderL = s === 1 ? 'border-l border-primary/10' : '';
-        cells.push(`<td class="p-2 ${borderL}"><div class="avail-cell ${cls} mx-auto" ${clickable}></div></td>`);
+        cells.push(`<td class="p-2 ${borderL}"><div class="avail-cell ${cls} ${cursorCls} mx-auto transition-transform" ${clickable}></div></td>`);
       }
     });
 
@@ -253,6 +254,10 @@ function toggleMyAvail(dateKey, slotIndex) {
     const campaignDates = activeCampaign.proposed_dates || activeCampaign.dates || [];
     const dates = [...campaignDates].sort((a, b) => a - b);
     tbody.innerHTML = renderAvailRows(dates);
+  } else {
+    // If tbody not found, full refresh
+    const app = document.getElementById('app');
+    app.innerHTML = renderDisponibilites(true);
   }
 }
 
