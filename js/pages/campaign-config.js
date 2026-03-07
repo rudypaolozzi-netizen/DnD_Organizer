@@ -61,6 +61,15 @@ function renderCampaignConfig() {
             <p class="text-xs text-text-secondary">Ces notes sont masquées pour les joueurs.</p>
           </div>
 
+          <!-- Session Quota -->
+          <div class="space-y-2 animate-fade-in stagger-4">
+            <label class="block text-base font-gothic font-bold tracking-wide uppercase">Nombre de Joueurs Maximum</label>
+            <div class="flex items-center gap-4">
+              <input type="number" id="max-players" class="input-field w-24" value="5" min="1" max="10"/>
+              <p class="text-xs text-text-secondary">Nombre de participants nécessaires pour clore les votes.</p>
+            </div>
+          </div>
+
           <!-- Action Buttons -->
           <div class="space-y-3 animate-fade-in stagger-4">
             <button onclick="announceSession()" class="btn-primary">
@@ -154,13 +163,16 @@ async function announceSession() {
   try {
     // 1. Sauvegarder dans Supabase
     const user = getUser();
+    const maxPlayers = parseInt(document.getElementById('max-players')?.value || '5');
     const { data: campaignData, error: cError } = await supabaseClient
       .from('campaigns')
       .insert({
         name: campaignName,
         proposed_dates: selectedDates,
         month: currentMonth,
-        year: currentYear
+        year: currentYear,
+        max_players: maxPlayers,
+        status: 'proposée'
       })
       .select()
       .single();

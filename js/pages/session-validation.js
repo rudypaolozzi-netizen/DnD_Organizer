@@ -169,6 +169,12 @@ async function sendInvitations() {
             throw new Error("Aucun destinataire trouvé.");
         }
 
+        // 1.5 Mettre à jour le statut de la campagne
+        await supabaseClient
+            .from('campaigns')
+            .update({ status: 'confirmée' })
+            .eq('id', activeCampaign.id);
+
         const mainDate = activeCampaign.proposed_dates && activeCampaign.proposed_dates[0] ? 
             `${activeCampaign.proposed_dates[0]} ${MONTH_NAMES[activeCampaign.month]} ${activeCampaign.year}` : 
             "Date à définir";
