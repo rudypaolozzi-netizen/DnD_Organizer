@@ -177,12 +177,9 @@ async function announceSession() {
       .map(p => p.email)
       .filter(Boolean);
     
-    // MODE TEST : Si on tourne sur le domaine onboarding@resend.dev, 
-    // on ne peut envoyer qu'à l'email du compte Resend.
-    // Pour le test, on va envoyer UNIQUEMENT à l'utilisateur actuel.
-    if (currentUser && currentUser.email) {
-      recipientList = [currentUser.email]; 
-      console.log("Mode Test : Envoi uniquement à l'utilisateur actuel :", currentUser.email);
+    // MODE REEL : On prend tous les emails trouvés dans la table profiles
+    if (recipientList.length === 0 && currentUser && currentUser.email) {
+      recipientList = [currentUser.email]; // Fallback technique si aucun joueur trouvé
     }
 
     if (recipientList.length === 0) {
