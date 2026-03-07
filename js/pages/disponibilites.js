@@ -1,19 +1,69 @@
 // ===== Disponibilités du Groupe =====
-
 const DAYS = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
-const SLOTS = ['14-18h', 'Soir'];
 
-// Example players that will join the campaign
-const CAMPAIGN_PLAYERS = [
-  { name: 'Moi', isSelf: true, avail: {} },
-  { name: 'Grog Ironfist', isSelf: false, avail: {} },
-  { name: 'Lyra Moonwhisper', isSelf: false, avail: {} },
-  { name: 'Borg the Bard', isSelf: false, avail: {} },
-];
-
+let playersData = []; // To be filled with real profiles
 let myAvailability = {}; // Object mapping date string to array of slot availability [0, 0]
+let isLoadingData = false;
 
-function renderDisponibilites() {
+async function loadAvailabilityData() {
+  if (isLoadingData) return;
+  isLoadingData = true;
+
+  try {
+    // 1. Fetch real players
+    const { data: players, error: pError } = await supabaseClient
+      .from('profiles')
+      .select('user_id, pseudo');
+    
+    if (pError) throw pError;
+    playersData = players || [];
+
+    // 2. Fetch latest campaign if none is active
+    if (!activeCampaign) {
+      const { data: campaign, error: cError } = await supabaseClient
+        .from('campaigns')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+      
+      if (!cError) activeCampaign = campaign;
+    }
+
+    // 3. Fetch my personal availabilities
+    const user = getUser();
+    if (user && activeCampaign) {
+      const { data: avails, error: aError } = await supabaseClient
+        .from('availabilities')
+        .select('*')
+        .eq('campaign_id', activeCampaign.id)
+        .eq('user_id', user.id);
+      
+      if (!aError && avails) {
+        avails.forEach(av => {
+          myAvailability[av.date_key] = av.slots.map(s => s ? 1 : 0);
+        });
+      }
+    }
+
+  } catch (err) {
+    console.warn('Error loading availability data:', err);
+  } finally {
+    isLoadingData = false;
+    const app = document.getElementById('app');
+    if (window.location.hash === '#disponibilites') {
+      app.innerHTML = renderDisponibilites(true);
+    }
+  }
+}
+
+
+function renderDisponibilites(isUpdate = false) {
+  if (!isUpdate) {
+    // Trigger async load on first entry
+    loadAvailabilityData();
+  }
+
   if (!activeCampaign) {
     return `
       <div class="flex flex-col min-h-[100dvh] pb-24">
@@ -25,22 +75,24 @@ function renderDisponibilites() {
           <h1 class="text-xl font-bold text-center flex-1 pr-10">Disponibilités du Groupe</h1>
         </div>
 
-        <div class="flex-1 overflow-y-auto hide-scrollbar px-4 py-8 flex flex-col items-center justify-center">
-          <!-- Empty State -->
-          <div class="card p-8 flex flex-col items-center justify-center text-center w-full max-w-sm mx-auto animate-fade-in stagger-1">
-            <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-              <span class="material-symbols-outlined text-primary text-4xl">event_busy</span>
-            </div>
-            <h2 class="text-lg font-bold mb-2">Aucune campagne trouvée</h2>
-            <p class="text-text-secondary text-sm">Le MJ n'a pas encore proposé de dates pour une nouvelle session.</p>
-          </div>
+        <div class="flex-1 overflow-y-auto hide-scrollbar px-4 py-8 flex flex-col items-center justify-center text-center">
+          ${isLoadingData ? 
+            `<div class="animate-spin text-primary"><span class="material-symbols-outlined text-4xl">sync</span></div><p class="mt-4 text-text-secondary">Chargement de la session...</p>` : 
+            `<div class="card p-8 flex flex-col items-center justify-center text-center w-full max-w-sm mx-auto animate-fade-in stagger-1">
+              <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                <span class="material-symbols-outlined text-primary text-4xl">event_busy</span>
+              </div>
+              <h2 class="text-lg font-bold mb-2">Aucune campagne trouvée</h2>
+              <p class="text-text-secondary text-sm">Le MJ n'a pas encore proposé de dates pour une nouvelle session.</p>
+            </div>`
+          }
         </div>
       </div>
     `;
   }
 
-  // Determine dates for the calendar based on activeCampaign.dates
-  const dates = activeCampaign.dates.sort((a, b) => a - b);
+  const campaignDates = activeCampaign.proposed_dates || activeCampaign.dates || [];
+  const dates = [...campaignDates].sort((a, b) => a - b);
 
   // Ensure myAvailability is initialized for the proposed dates
   dates.forEach(d => {
@@ -160,43 +212,47 @@ function renderDisponibilites() {
 
 function renderAvailRows(dates) {
   const user = getUser();
-  const pseudo = user ? user.pseudo : 'Moi';
+  const userId = user ? user.id : null;
 
-  // Ensure current user is at the top
-  CAMPAIGN_PLAYERS[0].name = pseudo + ' (Moi)';
-
-  return CAMPAIGN_PLAYERS.map((player, pi) => {
+  // Combine real players
+  return playersData.map((player, pi) => {
+    const isSelf = player.user_id === userId;
+    const displayName = isSelf ? player.pseudo + ' (Moi)' : player.pseudo;
     const cells = [];
+    
     dates.forEach((date, dateIndex) => {
       const key = `${activeCampaign.year}-${activeCampaign.month}-${date}`;
       for (let s = 0; s < 2; s++) { // 0=Aprem, 1=Soir
-        // Default to 0 (unavailable) for demo players, otherwise use myAvailability
-        const isAvail = pi === 0 ? myAvailability[key][s] : 0;
+        // If it's the current user, use myAvailability. Otherwise, show 0 (unavailable) as it's just a mockup for other players
+        const isAvail = isSelf ? (myAvailability[key] ? myAvailability[key][s] : 0) : 0;
         const cls = isAvail ? 'available' : 'unavailable';
-        const clickable = pi === 0 ? `onclick="toggleMyAvail('${key}', ${s})"` : '';
+        const clickable = isSelf ? `onclick="toggleMyAvail('${key}', ${s})"` : '';
         const borderL = s === 1 ? 'border-l border-primary/10' : '';
         cells.push(`<td class="p-2 ${borderL}"><div class="avail-cell ${cls} mx-auto" ${clickable}></div></td>`);
       }
     });
 
-    const nameClass = player.isSelf ? 'text-primary font-bold' : '';
-    const bgClass = pi === 0 ? 'bg-[#142e1f]' : 'bg-background-dark';
+    const nameClass = isSelf ? 'text-primary font-bold' : '';
+    const bgClass = isSelf ? 'bg-[#142e1f]' : 'bg-background-dark';
 
     return `
-      <tr class="${pi === 0 ? 'bg-primary/5' : ''}">
-        <td class="p-3 text-sm sticky left-0 ${bgClass} z-20 border-r border-primary/20 ${nameClass}" style="background-color: ${pi === 0 ? '#142e1f' : '#102216'};">${player.name}</td>
+      <tr class="${isSelf ? 'bg-primary/5' : ''}">
+        <td class="p-3 text-sm sticky left-0 ${bgClass} z-20 border-r border-primary/20 ${nameClass}" style="background-color: ${isSelf ? '#142e1f' : '#102216'};">${displayName}</td>
         ${cells.join('')}
-        <td class="sticky right-0 z-20 w-[40px]" style="background-color: ${pi === 0 ? '#142e1f' : '#102216'};"></td>
+        <td class="sticky right-0 z-20 w-[40px]" style="background-color: ${isSelf ? '#142e1f' : '#102216'};"></td>
       </tr>
     `;
   }).join('');
 }
 
 function toggleMyAvail(dateKey, slotIndex) {
+  if (!myAvailability[dateKey]) myAvailability[dateKey] = [0, 0];
   myAvailability[dateKey][slotIndex] = myAvailability[dateKey][slotIndex] ? 0 : 1;
+  
   const tbody = document.querySelector('#avail-table tbody');
   if (tbody) {
-    const dates = activeCampaign.dates.sort((a, b) => a - b);
+    const campaignDates = activeCampaign.proposed_dates || activeCampaign.dates || [];
+    const dates = [...campaignDates].sort((a, b) => a - b);
     tbody.innerHTML = renderAvailRows(dates);
   }
 }
@@ -208,8 +264,39 @@ function scrollAvailTable(amount) {
   }
 }
 
-function saveAvailability() {
-  showToast('Disponibilités enregistrées ! ✨');
+async function saveAvailability() {
+  const user = getUser();
+  if (!user || !activeCampaign) {
+    showToast('❌ Erreur : session ou utilisateur non trouvé.');
+    return;
+  }
+
+  const btn = document.querySelector('button[onclick="saveAvailability()"]');
+  const origin = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = 'Enregistrement...';
+
+  try {
+    const promises = Object.entries(myAvailability).map(([dateKey, slots]) => {
+      return supabaseClient
+        .from('availabilities')
+        .upsert({
+          campaign_id: activeCampaign.id,
+          user_id: user.id,
+          date_key: dateKey,
+          slots: slots.map(s => !!s)
+        }, { onConflict: 'campaign_id,user_id,date_key' });
+    });
+
+    await Promise.all(promises);
+    showToast('Disponibilités enregistrées ! ✨');
+  } catch (err) {
+    console.error(err);
+    showToast('❌ Erreur lors de la sauvegarde.');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = origin;
+  }
 }
 
 function showToast(message) {

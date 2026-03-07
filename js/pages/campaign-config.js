@@ -155,13 +155,24 @@ async function announceSession() {
   btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Envoi en cours...';
 
   try {
-    // 1. Sauvegarder localement l'état
-    activeCampaign = {
-      name: campaignName,
-      dates: selectedDates,
-      month: currentMonth,
-      year: currentYear
-    };
+    // 1. Sauvegarder dans Supabase
+    const user = getUser();
+    const { data: campaignData, error: cError } = await supabaseClient
+      .from('campaigns')
+      .insert({
+        name: campaignName,
+        proposed_dates: selectedDates,
+        month: currentMonth,
+        year: currentYear,
+        mj_id: user?.id
+      })
+      .select()
+      .single();
+
+    if (cError) throw new Error("Erreur lors de la sauvegarde de la session : " + cError.message);
+
+    activeCampaign = campaignData;
+    console.log('Session enregistrée avec ID :', activeCampaign.id);
 
     // 2. Récupérer les emails des joueurs
     // Note: Si vous voyez une erreur ici, c'est peut-être que la colonne 'email' 
