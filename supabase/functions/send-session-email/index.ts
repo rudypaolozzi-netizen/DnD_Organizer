@@ -15,9 +15,8 @@ Deno.serve(async (req) => {
     const { campaignName, recipients, dates } = await req.json();
     const apiKey = Deno.env.get('BREVO_API_KEY');
     
-    // IMPORTANT: L'adresse "from" doit être votre propre email vérifié sur Brevo
-    // Changez "votre-email@gmail.com" par votre email réel dans le dashboard Brevo
-    const senderEmail = "votre-email@gmail.com"; 
+    // L'adresse "from" doit être votre email vérifié sur Brevo
+    const senderEmail = "rudy.paolozzi@gmail.com"; 
 
     if (!apiKey) throw new Error("BREVO_API_KEY missing");
 
