@@ -170,7 +170,9 @@ async function announceSession() {
       .from('profiles')
       .select('email, pseudo');
     
-    if (pError) console.warn('Note: Erreur lors de la lecture des emails (colonne manquante ?):', pError);
+    if (pError) console.warn('Note: Erreur lors de la lecture des emails:', pError);
+    
+    console.log('Joueurs trouvés dans la table profiles :', (players || []).map(p => p.pseudo));
 
     const currentUser = getUser();
     let recipientList = (players || [])

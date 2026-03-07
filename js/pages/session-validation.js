@@ -103,6 +103,8 @@ async function sendInvitations() {
         
         if (pError) console.warn('Note: Erreur lors de la lecture des emails:', pError);
 
+        console.log('Joueurs trouvés pour invitations :', (players || []).map(p => p.pseudo));
+
         const currentUser = getUser();
         let recipientList = (players || [])
             .map(p => p.email)
