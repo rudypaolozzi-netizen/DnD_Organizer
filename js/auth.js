@@ -19,7 +19,12 @@ async function signIn(email, password, role) {
         .eq('user_id', data.user.id)
         .single();
 
-    currentUser = { ...data.user, ...profile, role: role || profile?.role };
+    currentUser = { 
+        ...data.user, 
+        ...profile, 
+        email: data.user.email || profile?.email, // Priorité à l'email d'auth
+        role: role || profile?.role 
+    };
     localStorage.setItem('dnd_user', JSON.stringify(currentUser));
     return { success: true, user: currentUser };
 }
