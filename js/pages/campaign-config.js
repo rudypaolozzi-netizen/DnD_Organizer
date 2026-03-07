@@ -204,7 +204,7 @@ async function announceSession() {
 
     if (data && data.error) throw new Error(data.error);
 
-    showToast('📢 Message envoyé à ' + recipientList[0] + ' !');
+    showToast(`📢 Message envoyé à ${recipientList.length} joueur(s) !`);
     setTimeout(() => navigateTo('disponibilites'), 2000);
   } catch (err) {
     console.error('Détails de l\'erreur :', err);

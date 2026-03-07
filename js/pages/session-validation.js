@@ -87,8 +87,63 @@ function addQuickItem(item) {
     }
 }
 
-function sendInvitations() {
-    showToast('📨 Invitations envoyées à tous les joueurs !');
+async function sendInvitations() {
+    const btn = document.querySelector('button[onclick="sendInvitations()"]');
+    const originalContent = btn.innerHTML;
+    const items = document.getElementById('val-items').value || 'Aucune note particulière';
+    
+    btn.disabled = true;
+    btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Envoi...';
+
+    try {
+        // 1. Récupérer les emails des joueurs
+        const { data: players, error: pError } = await supabaseClient
+            .from('profiles')
+            .select('email, pseudo');
+        
+        if (pError) console.warn('Note: Erreur lors de la lecture des emails:', pError);
+
+        const currentUser = getUser();
+        let recipientList = (players || [])
+            .map(p => p.email)
+            .filter(Boolean);
+        
+        // Fallback si on est seul
+        if (recipientList.length === 0 && currentUser && currentUser.email) {
+            recipientList = [currentUser.email];
+        }
+
+        if (recipientList.length === 0) {
+            throw new Error("Aucun destinataire trouvé.");
+        }
+
+        // 2. Appeler l'Edge Function
+        // On passe les infos de la session validée
+        const { data, error } = await supabaseClient.functions.invoke('send-session-email', {
+            body: { 
+                campaignName: "Session Confirmée : Samedi 28 Octobre", 
+                dates: ["Samedi 28 Octobre à 19:30"],
+                recipients: recipientList,
+                customNote: items // On pourra l'utiliser dans l'Edge Function plus tard
+            }
+        });
+
+        if (error) {
+            console.error('Erreur Supabase:', error);
+            throw new Error(`Erreur serveur (${error.context?.status || '?'})`);
+        }
+
+        if (data && data.error) throw new Error(data.error);
+
+        showToast(`📢 Invitations envoyées à ${recipientList.length} joueur(s) !`);
+        setTimeout(() => navigateTo('dashboard'), 2000);
+    } catch (err) {
+        console.error('Erreur Invitations:', err);
+        showToast('❌ Erreur : ' + (err.message || 'Problème de connexion'));
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalContent;
+    }
 }
 
 function scheduleReminder() {
