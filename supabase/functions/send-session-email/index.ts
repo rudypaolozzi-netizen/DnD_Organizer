@@ -8,24 +8,23 @@ const corsHeaders = {
 };
 
 serve(async (req) => {
-  // Gérer les requêtes OPTIONS (CORS)
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
   try {
-    const { campaignName, dates, players } = await req.json();
+    const body = await req.json();
+    console.log("Payload reçu:", JSON.stringify(body));
 
-    // Construction du contenu de l'email
+    const { campaignName, dates, recipients } = body;
+
+    if (!recipients || recipients.length === 0) {
+      throw new Error("Liste des destinataires vide.");
+    }
+
     const dateList = dates.map((d: number) => `<li>Le ${d}</li>`).join("");
     
-    // Pour cet exemple, on envoie un seul mail récapitulatif (ou on pourrait boucler sur les emails des joueurs)
-    // Ici on simule l'envoi aux joueurs listés
-    const recipientEmails = players.map((p: any) => p.email).filter(Boolean);
-
-    if (recipientEmails.length === 0) {
-      throw new Error("Aucun email de destinataire trouvé.");
-    }
+    console.log(`Tentative d'envoi via Resend à: ${recipients.join(", ")}`);
 
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -34,8 +33,8 @@ serve(async (req) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "D&D Organizer <onboarding@resend.dev>", // Utilisez votre domaine si configuré
-        to: recipientEmails,
+        from: "D&D Organizer <onboarding@resend.dev>",
+        to: recipients,
         subject: `🎲 Nouvelle session : ${campaignName}`,
         html: `
           <h1>Nouvelle session de JdR annoncée !</h1>
@@ -50,14 +49,20 @@ serve(async (req) => {
     });
 
     const data = await res.json();
+    console.log("Réponse Resend:", JSON.stringify(data));
+
+    if (!res.ok) {
+      throw new Error(data.message || "Erreur Resend inconnue");
+    }
 
     return new Response(JSON.stringify(data), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error) {
+    console.error("Erreur Function:", error.message);
     return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
+      status: 200, // On renvoie 200 pour que le client voit l'objet JSON error
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }

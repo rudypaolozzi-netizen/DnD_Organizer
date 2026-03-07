@@ -30,7 +30,7 @@ async function signUp(email, password, pseudo, role) {
     if (error) return { success: false, error: error.message };
 
     // Create profile
-    await supabaseClient.from('profiles').insert({ user_id: data.user.id, pseudo, role });
+    await supabaseClient.from('profiles').insert({ user_id: data.user.id, pseudo, role, email });
 
     currentUser = { ...data.user, pseudo, role };
     localStorage.setItem('dnd_user', JSON.stringify(currentUser));

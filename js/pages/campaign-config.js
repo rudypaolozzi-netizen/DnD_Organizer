@@ -163,18 +163,35 @@ async function announceSession() {
       year: currentYear
     };
 
-    // 2. Récupérer les emails des joueurs (pour la démo, on utilise des emails fictifs ou ceux de la base)
-    // Dans une version réelle, on ferait un SELECT sur la table profiles
+    // 2. Récupérer les emails des joueurs
+    // Note: Si vous voyez une erreur ici, c'est peut-être que la colonne 'email' 
+    // n'existe pas encore dans votre table 'profiles'.
     const { data: players, error: pError } = await supabaseClient
       .from('profiles')
       .select('email, pseudo');
+    
+    if (pError) console.warn('Note: Erreur lors de la lecture des emails (colonne manquante ?):', pError);
+
+    const currentUser = getUser();
+    const recipientList = (players || [])
+      .map(p => p.email)
+      .filter(Boolean);
+    
+    // Si la liste est vide, on ajoute au moins l'email de l'utilisateur actuel pour tester
+    if (recipientList.length === 0 && currentUser && currentUser.email) {
+      recipientList.push(currentUser.email);
+    }
+
+    if (recipientList.length === 0) {
+      throw new Error("Aucun destinataire trouvé (les profils n'ont pas d'email)");
+    }
     
     // 3. Appeler l'Edge Function
     const { data, error } = await supabaseClient.functions.invoke('send-session-email', {
       body: { 
         campaignName: campaignName, 
         dates: selectedDates,
-        players: players || [{ email: 'test@example.com' }] // Fallback pour la démo
+        recipients: recipientList
       }
     });
 
