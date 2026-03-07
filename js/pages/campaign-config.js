@@ -163,8 +163,7 @@ async function announceSession() {
         name: campaignName,
         proposed_dates: selectedDates,
         month: currentMonth,
-        year: currentYear,
-        mj_id: user?.id
+        year: currentYear
       })
       .select()
       .single();
