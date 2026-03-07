@@ -6,57 +6,48 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 
-console.log("Edge Function 'send-session-email' is live.");
-
 Deno.serve(async (req) => {
-  const { method } = req;
-  console.log(`[HTTP] ${method} request received`);
-
-  if (method === 'OPTIONS') {
+  if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }
 
   try {
-    const body = await req.json();
-    console.log("[DATA] Payload:", JSON.stringify(body));
+    const { campaignName, recipients, dates } = await req.json();
+    const apiKey = Deno.env.get('BREVO_API_KEY');
+    
+    // IMPORTANT: L'adresse "from" doit être votre propre email vérifié sur Brevo
+    // Changez "votre-email@gmail.com" par votre email réel dans le dashboard Brevo
+    const senderEmail = "votre-email@gmail.com"; 
 
-    const { campaignName, recipients, dates } = body;
-    const apiKey = Deno.env.get('RESEND_API_KEY');
+    if (!apiKey) throw new Error("BREVO_API_KEY missing");
 
-    if (!apiKey) {
-      console.error("[ERROR] API Key missing");
-      return new Response(JSON.stringify({ error: "API Key missing" }), {
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      });
-    }
-
-    console.log(`[ACTION] Sending email to ${recipients}`);
-
-    const res = await fetch('https://api.resend.com/emails', {
+    const res = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
+        'accept': 'application/json',
+        'api-key': apiKey,
+        'content-type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'D&D Organizer <onboarding@resend.dev>',
-        to: recipients,
-        subject: `🎲 Session : ${campaignName}`,
-        html: `<strong>Nouvelle session !</strong><br>Campagne: ${campaignName}<br>Dates: ${dates.join(', ')}`,
+        sender: { name: "D&D Organizer", email: senderEmail },
+        to: recipients.map((email: string) => ({ email })),
+        subject: `🎲 Nouvelle session : ${campaignName}`,
+        htmlContent: `
+          <h1>🎲 Nouvelle session !</h1>
+          <p>Le MJ a proposé des dates pour <strong>${campaignName}</strong>.</p>
+          <p>Dates suggérées : ${dates.join(', ')}</p>
+          <p><a href="https://votre-app.vercel.app">Connectez-vous pour répondre</a></p>
+        `,
       }),
     });
 
     const result = await res.json();
-    console.log("[RESEND] Response:", JSON.stringify(result));
-
     return new Response(JSON.stringify(result), {
       status: res.ok ? 200 : 400,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
 
   } catch (err) {
-    console.error(`[CRASH] ${err.message}`);
     return new Response(JSON.stringify({ error: err.message }), {
       status: 400,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
