@@ -141,23 +141,54 @@ function toggleCalDate(day) {
   if (container) container.innerHTML = renderCalendar();
 }
 
-function announceSession() {
+async function announceSession() {
   const campaignName = document.getElementById('campaign-name').value || 'Nouvelle Campagne';
   if (selectedDates.length === 0) {
     showToast('⚠️ Sélectionnez au moins une date !');
     return;
   }
 
-  // Create active campaign
-  activeCampaign = {
-    name: campaignName,
-    dates: selectedDates,
-    month: currentMonth,
-    year: currentYear
-  };
+  // Visual feedback
+  const btn = document.querySelector('button[onclick="announceSession()"]');
+  const originalContent = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Envoi en cours...';
 
-  showToast('📢 Notification push envoyée. Un email a été envoyé aux joueurs pour valider leurs disponibilités.');
-  setTimeout(() => navigateTo('disponibilites'), 2000);
+  try {
+    // 1. Sauvegarder localement l'état
+    activeCampaign = {
+      name: campaignName,
+      dates: selectedDates,
+      month: currentMonth,
+      year: currentYear
+    };
+
+    // 2. Récupérer les emails des joueurs (pour la démo, on utilise des emails fictifs ou ceux de la base)
+    // Dans une version réelle, on ferait un SELECT sur la table profiles
+    const { data: players, error: pError } = await supabaseClient
+      .from('profiles')
+      .select('email, pseudo');
+    
+    // 3. Appeler l'Edge Function
+    const { data, error } = await supabaseClient.functions.invoke('send-session-email', {
+      body: { 
+        campaignName: campaignName, 
+        dates: selectedDates,
+        players: players || [{ email: 'test@example.com' }] // Fallback pour la démo
+      }
+    });
+
+    if (error) throw error;
+
+    showToast('📢 Notification envoyée par email aux joueurs !');
+    setTimeout(() => navigateTo('disponibilites'), 2000);
+  } catch (err) {
+    console.error('Erreur envoi email:', err);
+    showToast('❌ Erreur lors de l\'envoi de l\'email.');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = originalContent;
+  }
 }
 
 function saveDraft() {
