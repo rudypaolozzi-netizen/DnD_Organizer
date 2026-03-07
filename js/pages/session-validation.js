@@ -1,6 +1,52 @@
 // ===== Validation de Session (MJ) =====
-function renderSessionValidation() {
+let isValLoading = false;
+
+async function loadValidationData() {
+  if (isValLoading) return;
+  isValLoading = true;
+
+  try {
+    if (!activeCampaign) {
+      const { data: campaign, error: cError } = await supabaseClient
+        .from('campaigns')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+      
+      if (!cError) activeCampaign = campaign;
+    }
+  } catch (err) {
+    console.warn('Error loading validation data:', err);
+  } finally {
+    isValLoading = false;
+    if (window.location.hash === '#session-validation') {
+      const app = document.getElementById('app');
+      app.innerHTML = renderSessionValidation(true);
+    }
+  }
+}
+
+function renderSessionValidation(isUpdate = false) {
+  if (!isUpdate) {
+    loadValidationData();
+  }
+
+  if (!activeCampaign) {
     return `
+      <div class="flex flex-col min-h-[100dvh] pb-24 items-center justify-center text-center px-4">
+        <div class="animate-spin text-primary mb-4"><span class="material-symbols-outlined text-4xl">sync</span></div>
+        <p class="text-text-secondary">Chargement de la session pour validation...</p>
+      </div>
+    `;
+  }
+
+  // Use the first proposed date for now as a default, or empty if none
+  const mainDate = activeCampaign.proposed_dates && activeCampaign.proposed_dates[0] ? 
+    `${activeCampaign.proposed_dates[0]} ${MONTH_NAMES[activeCampaign.month]} ${activeCampaign.year}` : 
+    "Date à définir";
+
+  return `
     <div class="flex flex-col min-h-[100dvh] pb-24">
       <!-- Header -->
       <header class="flex items-center px-4 py-4 bg-background-dark/95 backdrop-blur-md border-b border-primary/10 sticky top-0 z-10">
@@ -16,15 +62,19 @@ function renderSessionValidation() {
           <div class="mb-2 flex justify-center">
             <span class="material-symbols-outlined text-primary text-4xl">calendar_month</span>
           </div>
-          <p class="text-primary text-sm font-medium uppercase tracking-widest mb-1">Date sélectionnée</p>
-          <h2 class="text-4xl font-black">Samedi 28 Octobre</h2>
+          <p class="text-primary text-sm font-medium uppercase tracking-widest mb-1">Date sélectionnée (Pre-Validation)</p>
+          <h2 class="text-4xl font-black">${mainDate}</h2>
           <div class="flex items-center gap-2 text-text-secondary text-sm font-medium mt-2 justify-center">
             <span class="material-symbols-outlined text-primary text-xl">schedule</span>
-            <span>19:30 – 23:30</span>
+            <span>Horaire à confirmer dans l'invitation</span>
           </div>
         </section>
 
         <div class="px-4 space-y-6">
+          <div class="bg-surface-dark p-4 rounded-xl border border-primary/20 animate-fade-in">
+            <h3 class="font-bold mb-2">Campagne : ${activeCampaign.name}</h3>
+            <p class="text-xs text-text-secondary">Validez les détails ci-dessous pour envoyer l'invitation finale à tout le groupe.</p>
+          </div>
           <!-- Location -->
           <div class="space-y-2 animate-fade-in stagger-1">
             <label class="text-sm font-bold">Lieu de la session</label>
@@ -119,14 +169,18 @@ async function sendInvitations() {
             throw new Error("Aucun destinataire trouvé.");
         }
 
+        const mainDate = activeCampaign.proposed_dates && activeCampaign.proposed_dates[0] ? 
+            `${activeCampaign.proposed_dates[0]} ${MONTH_NAMES[activeCampaign.month]} ${activeCampaign.year}` : 
+            "Date à définir";
+
         // 2. Appeler l'Edge Function
         // On passe les infos de la session validée
         const { data, error } = await supabaseClient.functions.invoke('send-session-email', {
             body: { 
-                campaignName: "Session Confirmée : Samedi 28 Octobre", 
-                dates: ["Samedi 28 Octobre à 19:30"],
+                campaignName: `Session Confirmée : ${activeCampaign.name}`, 
+                dates: [mainDate],
                 recipients: recipientList,
-                customNote: items // On pourra l'utiliser dans l'Edge Function plus tard
+                customNote: items 
             }
         });
 

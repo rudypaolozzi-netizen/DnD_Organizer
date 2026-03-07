@@ -15,5 +15,9 @@ function initSupabase() {
   }
 }
 
+// Global session state
+let activeCampaign = null; 
+const MONTH_NAMES = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+
 initSupabase();
 

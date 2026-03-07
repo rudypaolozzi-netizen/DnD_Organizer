@@ -4,9 +4,6 @@ let selectedDates = [];
 const today = new Date();
 let currentMonth = today.getMonth();
 let currentYear = today.getFullYear();
-let activeCampaign = null; // Global variable to store the campaign
-
-const MONTH_NAMES = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 
 function renderCampaignConfig() {
   return `

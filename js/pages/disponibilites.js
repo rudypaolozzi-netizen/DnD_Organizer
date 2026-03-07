@@ -1,5 +1,4 @@
 // ===== Disponibilités du Groupe =====
-const DAYS = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
 
 let playersData = []; // To be filled with real profiles
 let myAvailability = {}; // Object mapping date string to array of slot availability [0, 0]
@@ -133,11 +132,11 @@ function renderDisponibilites(isUpdate = false) {
           
           <!-- Table container -->
           <div class="overflow-x-auto hide-scrollbar rounded-xl border border-primary/10" id="avail-scroll-container">
-            <table class="w-full border-collapse min-w-[700px]" id="avail-table">
+            <table class="w-full border-collapse" id="avail-table">
               <thead>
                 <!-- Day headers row WITH arrows embedded -->
                 <tr class="bg-surface-dark">
-                  <th class="p-2 text-left text-xs font-bold uppercase tracking-wider border-b border-primary/20 sticky left-0 bg-surface-dark z-20 min-w-[120px]">
+                  <th class="p-2 text-left text-[10px] font-bold uppercase tracking-wider border-b border-primary/20 sticky left-0 bg-surface-dark z-20 min-w-[90px] w-[90px]">
                     <div class="flex items-center justify-between">
                       <span>Joueurs</span>
                       <!-- Left Arrow inside the header -->
@@ -150,8 +149,8 @@ function renderDisponibilites(isUpdate = false) {
     const dateObj = new Date(activeCampaign.year, activeCampaign.month, date);
     const dayName = DAYS[dateObj.getDay()];
     return `
-                    <th class="p-3 text-center text-xs font-bold uppercase tracking-wider border-b border-l border-primary/20" colspan="2">
-                      ${dayName}<br/><span class="text-[10px] font-medium text-text-secondary">${date} ${MONTH_NAMES[activeCampaign.month].substring(0, 3)}</span>
+                    <th class="p-3 text-center text-[10px] font-bold uppercase tracking-wider border-b border-l border-primary/20 min-w-[80px]" colspan="2">
+                      ${dayName}<br/><span class="text-[9px] font-medium text-text-secondary">${date} ${MONTH_NAMES[activeCampaign.month].substring(0, 3)}</span>
                     </th>
                     `;
   }).join('')}
@@ -164,10 +163,10 @@ function renderDisponibilites(isUpdate = false) {
                 </tr>
                 <!-- Slot sub-headers -->
                 <tr class="bg-surface-dark/80">
-                  <th class="p-1 border-b border-primary/10 sticky left-0 bg-surface-dark/80 z-20"></th>
+                  <th class="p-1 border-b border-primary/10 sticky left-0 bg-surface-dark/80 z-20 w-[90px]"></th>
                   ${dates.map(() => `
-                    <th class="p-1 text-center border-b border-primary/10 text-[8px] text-text-secondary">14-18h</th>
-                    <th class="p-1 text-center border-b border-l border-primary/10 text-[8px] text-text-secondary">Soir</th>
+                    <th class="p-1 text-center border-b border-primary/10 text-[8px] text-text-secondary w-[40px]">14-18h</th>
+                    <th class="p-1 text-center border-b border-l border-primary/10 text-[8px] text-text-secondary w-[40px]">Soir</th>
                   `).join('')}
                   <th class="p-1 border-b border-primary/10 sticky right-0 bg-surface-dark/80 z-20"></th>
                 </tr>
@@ -260,6 +259,7 @@ function toggleMyAvail(dateKey, slotIndex) {
 function scrollAvailTable(amount) {
   const container = document.getElementById('avail-scroll-container');
   if (container) {
+    // Scroll by roughly one or two columns
     container.scrollBy({ left: amount, behavior: 'smooth' });
   }
 }
