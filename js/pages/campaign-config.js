@@ -173,24 +173,23 @@ async function announceSession() {
     if (pError) console.warn('Note: Erreur lors de la lecture des emails (colonne manquante ?):', pError);
 
     const currentUser = getUser();
-    const recipientList = (players || [])
+    let recipientList = (players || [])
       .map(p => p.email)
       .filter(Boolean);
     
-    // Si la liste est vide, on ajoute au moins l'email de l'utilisateur actuel pour tester
-    if (recipientList.length === 0 && currentUser && currentUser.email) {
-      recipientList.push(currentUser.email);
+    // MODE TEST : Si on tourne sur le domaine onboarding@resend.dev, 
+    // on ne peut envoyer qu'à l'email du compte Resend.
+    // Pour le test, on va envoyer UNIQUEMENT à l'utilisateur actuel.
+    if (currentUser && currentUser.email) {
+      recipientList = [currentUser.email]; 
+      console.log("Mode Test : Envoi uniquement à l'utilisateur actuel :", currentUser.email);
     }
 
     if (recipientList.length === 0) {
-      throw new Error("Aucun destinataire trouvé (les profils n'ont pas d'email)");
+      throw new Error("Aucun destinataire trouvé. Assurez-vous d'être connecté avec un email valide.");
     }
     
-    console.log('Envoi à l\'Edge Function:', { 
-      campaignName, 
-      dates: selectedDates,
-      recipients: recipientList 
-    });
+    console.log('Appel de la fonction avec :', { campaignName, recipients: recipientList });
 
     // 3. Appeler l'Edge Function
     const { data, error } = await supabaseClient.functions.invoke('send-session-email', {
@@ -202,12 +201,13 @@ async function announceSession() {
     });
 
     if (error) throw error;
+    if (data && data.error) throw new Error(data.error);
 
-    showToast('📢 Notification envoyée par email aux joueurs !');
+    showToast('📢 Message envoyé à ' + recipientList[0] + ' !');
     setTimeout(() => navigateTo('disponibilites'), 2000);
   } catch (err) {
-    console.error('Erreur envoi email:', err);
-    showToast('❌ Erreur lors de l\'envoi de l\'email.');
+    console.error('Détails de l\'erreur :', err);
+    showToast('❌ Erreur : ' + (err.message || 'Problème de connexion'));
   } finally {
     btn.disabled = false;
     btn.innerHTML = originalContent;
