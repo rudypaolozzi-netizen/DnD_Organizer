@@ -3,36 +3,35 @@
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 
-console.log("Function 'send-session-email' initialized and waiting for requests...");
+console.log("Edge Function 'send-session-email' is live.");
 
 Deno.serve(async (req) => {
-  console.log(">>> NOUVELLE REQUETE RECUE. Methode:", req.method);
+  const { method } = req;
+  console.log(`[HTTP] ${method} request received`);
 
-  // Gérer CORS
-  if (req.method === 'OPTIONS') {
-    console.log(">>> Réponse OPTIONS (CORS)");
-    return new Response('ok', { headers: corsHeaders })
+  if (method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
   }
 
   try {
-    console.log(">>> Lecture du corps de la requête...");
     const body = await req.json();
-    console.log(">>> Corps reçu:", JSON.stringify(body));
+    console.log("[DATA] Payload:", JSON.stringify(body));
 
     const { campaignName, recipients, dates } = body;
-
     const apiKey = Deno.env.get('RESEND_API_KEY');
+
     if (!apiKey) {
-      console.error("!!! ERREUR : Clé RESEND_API_KEY non trouvée dans les secrets !");
-      return new Response(JSON.stringify({ error: "Clé API Resend manquante sur Supabase." }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      console.error("[ERROR] API Key missing");
+      return new Response(JSON.stringify({ error: "API Key missing" }), {
         status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }
 
-    console.log(`>>> Tentative d'envoi à Resend pour ${campaignName} (${recipients.length} destinataires)...`);
+    console.log(`[ACTION] Sending email to ${recipients}`);
 
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -43,39 +42,24 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         from: 'D&D Organizer <onboarding@resend.dev>',
         to: recipients,
-        subject: `🎲 Nouvelle session : ${campaignName}`,
-        html: `
-          <h1>Nouvelle session de JdR !</h1>
-          <p>Le MJ a proposé de nouvelles dates pour <strong>${campaignName}</strong>.</p>
-          <p>Dates : ${dates ? dates.join(', ') : 'Non spécifiées'}</p>
-          <hr />
-          <p>Connectez-vous pour répondre.</p>
-        `,
+        subject: `🎲 Session : ${campaignName}`,
+        html: `<strong>Nouvelle session !</strong><br>Campagne: ${campaignName}<br>Dates: ${dates.join(', ')}`,
       }),
     });
 
-    const data = await res.json();
-    console.log(">>> Réponse de Resend reçue:", JSON.stringify(data));
+    const result = await res.json();
+    console.log("[RESEND] Response:", JSON.stringify(result));
 
-    if (res.ok) {
-      console.log(">>> Succès !");
-      return new Response(JSON.stringify(data), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200,
-      });
-    } else {
-      console.error(">>> Resend a renvoyé une erreur:", JSON.stringify(data));
-      return new Response(JSON.stringify({ error: data }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 400,
-      });
-    }
+    return new Response(JSON.stringify(result), {
+      status: res.ok ? 200 : 400,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    });
 
-  } catch (error) {
-    console.error(">>> ERREUR CRITIQUE DANS LA FONCTION:", error.message);
-    return new Response(JSON.stringify({ error: error.message }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  } catch (err) {
+    console.error(`[CRASH] ${err.message}`);
+    return new Response(JSON.stringify({ error: err.message }), {
       status: 400,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
   }
 });

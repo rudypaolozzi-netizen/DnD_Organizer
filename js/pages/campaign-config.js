@@ -191,7 +191,6 @@ async function announceSession() {
     
     console.log('Appel de la fonction avec :', { campaignName, recipients: recipientList });
 
-    // 3. Appeler l'Edge Function
     const { data, error } = await supabaseClient.functions.invoke('send-session-email', {
       body: { 
         campaignName: campaignName, 
@@ -200,7 +199,12 @@ async function announceSession() {
       }
     });
 
-    if (error) throw error;
+    if (error) {
+      console.error('Erreur Supabase Functions:', error);
+      const details = error.context ? ` (Status: ${error.context.status})` : '';
+      throw new Error(`Erreur serveur${details}. Vérifiez les logs Supabase.`);
+    }
+
     if (data && data.error) throw new Error(data.error);
 
     showToast('📢 Message envoyé à ' + recipientList[0] + ' !');
