@@ -186,6 +186,12 @@ async function announceSession() {
       throw new Error("Aucun destinataire trouvé (les profils n'ont pas d'email)");
     }
     
+    console.log('Envoi à l\'Edge Function:', { 
+      campaignName, 
+      dates: selectedDates,
+      recipients: recipientList 
+    });
+
     // 3. Appeler l'Edge Function
     const { data, error } = await supabaseClient.functions.invoke('send-session-email', {
       body: { 
