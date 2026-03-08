@@ -152,6 +152,13 @@ function renderDashboard(isUpdate = false) {
           <span class="material-symbols-outlined text-lg">edit_calendar</span>
           Donner mes disponibilités
         </button>
+
+        ${userRole === 'mj' && !isConfirmed ? `
+        <button onclick="deleteCampaign()" class="w-full mt-2 py-2 rounded-xl text-rose-400 text-xs font-bold transition-all flex items-center justify-center gap-1 hover:bg-rose-500/10 border border-rose-500/10">
+          <span class="material-symbols-outlined text-sm">delete</span>
+          Supprimer cette campagne
+        </button>
+        ` : ''}
       </div>
     `;
   }
@@ -318,6 +325,40 @@ async function validateCampaignFromDashboard() {
       btn.disabled = false;
       btn.innerHTML = originalContent;
     }
+  }
+}
+
+// MJ deletes a campaign in progress
+async function deleteCampaign() {
+  if (!dashCampaign) return;
+  
+  const confirmed = confirm(`Supprimer la campagne "${dashCampaign.name}" ?\nCette action est irréversible.`);
+  if (!confirmed) return;
+
+  try {
+    // Delete associated availabilities first
+    await supabaseClient
+      .from('availabilities')
+      .delete()
+      .eq('campaign_id', dashCampaign.id);
+
+    // Delete the campaign
+    const { error } = await supabaseClient
+      .from('campaigns')
+      .delete()
+      .eq('id', dashCampaign.id);
+
+    if (error) throw error;
+
+    showToast('🗑️ Campagne supprimée');
+    dashCampaign = null;
+    activeCampaign = null;
+    dateWithQuorum = null;
+    respondentsCount = 0;
+    loadDashboardData();
+  } catch (err) {
+    console.error('Delete error:', err);
+    showToast('❌ Erreur : ' + (err.message || 'Impossible de supprimer'));
   }
 }
 
