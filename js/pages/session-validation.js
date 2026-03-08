@@ -1,5 +1,10 @@
 // ===== Validation de Session (MJ) =====
+// This page is now simplified — main validation happens from the dashboard
+// when quorum is reached. This page shows a summary view.
+
 let isValLoading = false;
+let valAvailabilities = [];
+let valPlayers = [];
 
 async function loadValidationData() {
   if (isValLoading) return;
@@ -15,6 +20,23 @@ async function loadValidationData() {
         .single();
       
       if (!cError) activeCampaign = campaign;
+    }
+
+    if (activeCampaign) {
+      // Fetch all availabilities for this campaign
+      const { data: avails } = await supabaseClient
+        .from('availabilities')
+        .select('*')
+        .eq('campaign_id', activeCampaign.id);
+      
+      valAvailabilities = avails || [];
+
+      // Fetch all players
+      const { data: players } = await supabaseClient
+        .from('profiles')
+        .select('user_id, pseudo');
+      
+      valPlayers = players || [];
     }
   } catch (err) {
     console.warn('Error loading validation data:', err);
@@ -35,16 +57,70 @@ function renderSessionValidation(isUpdate = false) {
   if (!activeCampaign) {
     return `
       <div class="flex flex-col min-h-[100dvh] pb-24 items-center justify-center text-center px-4">
-        <div class="animate-spin text-primary mb-4"><span class="material-symbols-outlined text-4xl">sync</span></div>
-        <p class="text-text-secondary">Chargement de la session pour validation...</p>
+        ${isValLoading ? 
+          `<div class="animate-spin text-primary mb-4"><span class="material-symbols-outlined text-4xl">sync</span></div>
+          <p class="text-text-secondary">Chargement des données...</p>` :
+          `<div class="card p-8 flex flex-col items-center justify-center w-full max-w-sm mx-auto">
+            <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+              <span class="material-symbols-outlined text-primary text-4xl">event_busy</span>
+            </div>
+            <h2 class="text-lg font-bold mb-2">Aucune campagne</h2>
+            <p class="text-text-secondary text-sm">Créez d'abord une session depuis le dashboard.</p>
+          </div>`
+        }
       </div>
     `;
   }
 
-  // Use the first proposed date for now as a default, or empty if none
-  const mainDate = activeCampaign.proposed_dates && activeCampaign.proposed_dates[0] ? 
-    `${activeCampaign.proposed_dates[0]} ${MONTH_NAMES[activeCampaign.month]} ${activeCampaign.year}` : 
-    "Date à définir";
+  const isConfirmed = activeCampaign.status === 'confirmée';
+  const targetPlayers = activeCampaign.max_players || 5;
+  const campaignDates = activeCampaign.proposed_dates || [];
+
+  // Build date availability summary
+  let dateSummaryHtml = campaignDates.map(date => {
+    const key = `${activeCampaign.year}-${activeCampaign.month}-${date}`;
+    const dateObj = new Date(activeCampaign.year, activeCampaign.month, date);
+    const dayName = DAYS[dateObj.getDay()];
+    
+    // Count available players per slot
+    const dateAvails = valAvailabilities.filter(a => a.date_key === key);
+    const apremCount = dateAvails.filter(a => a.slots && a.slots[0]).length;
+    const soirCount = dateAvails.filter(a => a.slots && a.slots[1]).length;
+    
+    const apremReached = apremCount >= targetPlayers;
+    const soirReached = soirCount >= targetPlayers;
+
+    // Get player names for hover
+    const apremPlayers = dateAvails.filter(a => a.slots && a.slots[0]).map(a => {
+      const player = valPlayers.find(p => p.user_id === a.user_id);
+      return player ? player.pseudo : 'Inconnu';
+    });
+    const soirPlayers = dateAvails.filter(a => a.slots && a.slots[1]).map(a => {
+      const player = valPlayers.find(p => p.user_id === a.user_id);
+      return player ? player.pseudo : 'Inconnu';
+    });
+
+    return `
+      <div class="card p-4 ${apremReached || soirReached ? 'border-l-4 border-amber-400' : ''}">
+        <div class="flex items-center justify-between mb-2">
+          <h4 class="font-bold">${dayName} ${date} ${MONTH_NAMES[activeCampaign.month]}</h4>
+          ${apremReached || soirReached ? '<span class="text-[10px] font-bold text-amber-400 bg-amber-500/20 px-2 py-1 rounded-full">QUORUM ✓</span>' : ''}
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="p-2 rounded-lg ${apremReached ? 'bg-primary/10 border border-primary/30' : 'bg-surface-dark'}">
+            <p class="text-xs font-bold ${apremReached ? 'text-primary' : 'text-text-secondary'}">14h-18h</p>
+            <p class="text-lg font-black ${apremReached ? 'text-primary' : ''}">${apremCount}/${targetPlayers}</p>
+            ${apremPlayers.length > 0 ? `<p class="text-[10px] text-text-secondary mt-1">${apremPlayers.join(', ')}</p>` : ''}
+          </div>
+          <div class="p-2 rounded-lg ${soirReached ? 'bg-primary/10 border border-primary/30' : 'bg-surface-dark'}">
+            <p class="text-xs font-bold ${soirReached ? 'text-primary' : 'text-text-secondary'}">Soir</p>
+            <p class="text-lg font-black ${soirReached ? 'text-primary' : ''}">${soirCount}/${targetPlayers}</p>
+            ${soirPlayers.length > 0 ? `<p class="text-[10px] text-text-secondary mt-1">${soirPlayers.join(', ')}</p>` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
 
   return `
     <div class="flex flex-col min-h-[100dvh] pb-24">
@@ -53,161 +129,47 @@ function renderSessionValidation(isUpdate = false) {
         <button onclick="navigateTo('dashboard')" class="w-10 h-10 rounded-full hover:bg-white/5 flex items-center justify-center transition-colors">
           <span class="material-symbols-outlined">arrow_back</span>
         </button>
-        <h1 class="text-lg font-bold text-center flex-1 pr-10">Validation de la Session</h1>
+        <h1 class="text-lg font-bold text-center flex-1 pr-10">Suivi des Disponibilités</h1>
       </header>
 
-      <div class="flex-1 overflow-y-auto hide-scrollbar">
-        <!-- Hero Date -->
-        <section class="px-4 py-8 text-center bg-gradient-to-b from-primary/5 to-transparent animate-fade-in">
-          <div class="mb-2 flex justify-center">
-            <span class="material-symbols-outlined text-primary text-4xl">calendar_month</span>
+      <div class="flex-1 overflow-y-auto hide-scrollbar px-4 py-6 space-y-6">
+        <!-- Campaign Info -->
+        <div class="bg-surface-dark p-4 rounded-xl border border-primary/20 animate-fade-in">
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="font-bold">${activeCampaign.name}</h3>
+            <span class="text-[10px] font-bold uppercase px-2 py-1 rounded ${isConfirmed ? 'bg-primary/20 text-primary' : 'bg-amber-500/20 text-amber-400'}">${isConfirmed ? 'Confirmée' : activeCampaign.status || 'En cours'}</span>
           </div>
-          <p class="text-primary text-sm font-medium uppercase tracking-widest mb-1">Date sélectionnée (Pre-Validation)</p>
-          <h2 class="text-4xl font-black">${mainDate}</h2>
-          <div class="flex items-center gap-2 text-text-secondary text-sm font-medium mt-2 justify-center">
-            <span class="material-symbols-outlined text-primary text-xl">schedule</span>
-            <span>Horaire à confirmer dans l'invitation</span>
+          ${activeCampaign.lieu ? `
+          <div class="flex items-center gap-1 text-text-secondary text-sm mt-1">
+            <span class="material-symbols-outlined text-sm">location_on</span>
+            <span>${activeCampaign.lieu}</span>
           </div>
-        </section>
+          ` : ''}
+          <p class="text-xs text-text-secondary mt-2">Objectif : ${targetPlayers} joueur(s) disponibles sur un même créneau</p>
+        </div>
 
-        <div class="px-4 space-y-6">
-          <div class="bg-surface-dark p-4 rounded-xl border border-primary/20 animate-fade-in">
-            <h3 class="font-bold mb-2">Campagne : ${activeCampaign.name}</h3>
-            <p class="text-xs text-text-secondary">Validez les détails ci-dessous pour envoyer l'invitation finale à tout le groupe.</p>
-          </div>
-          <!-- Location -->
-          <div class="space-y-2 animate-fade-in stagger-1">
-            <label class="text-sm font-bold">Lieu de la session</label>
-            <div class="relative">
-              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary">location_city</span>
-              <input type="text" class="input-field input-with-icon" placeholder="L'Antre du Dragon (Adresse...)" value="L'Antre du Dragon"/>
-            </div>
-            <!-- Map placeholder -->
-            <div class="card h-32 flex items-center justify-center">
-              <div class="text-center">
-                <span class="material-symbols-outlined text-primary text-3xl">map</span>
-                <p class="text-text-secondary text-xs mt-1">Carte interactive</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Logistics -->
-          <div class="space-y-3 animate-fade-in stagger-2">
-            <div class="flex items-center justify-between">
-              <label class="text-base font-bold">Logistique & Préparations</label>
-              <span class="material-symbols-outlined text-primary">inventory_2</span>
-            </div>
-            <div class="card p-4 space-y-3">
-              <label class="text-sm font-medium text-text-secondary">Ce que chaque joueur doit apporter :</label>
-              <textarea id="val-items" class="input-field min-h-[80px] resize-none" placeholder="Ex: Dés, fiches de perso, snacks salés, boissons..."></textarea>
-              <div class="flex gap-2 flex-wrap">
-                <button onclick="addQuickItem('Sets de dés')" class="flex items-center gap-2 bg-surface-dark hover:bg-card-dark px-3 py-2 rounded-lg text-sm transition-colors border border-primary/10">
-                  <span class="material-symbols-outlined text-primary text-lg">casino</span>
-                  Sets de dés
-                </button>
-                <button onclick="addQuickItem('Snacks & Boissons')" class="flex items-center gap-2 bg-surface-dark hover:bg-card-dark px-3 py-2 rounded-lg text-sm transition-colors border border-primary/10">
-                  <span class="material-symbols-outlined text-primary text-lg">restaurant</span>
-                  Snacks & Boissons
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Action Buttons -->
-          <div class="space-y-3 pb-8 animate-fade-in stagger-3">
-            <button onclick="sendInvitations()" class="btn-primary">
-              <span class="material-symbols-outlined">send</span>
-              Envoyer les Invitations
-            </button>
-            <button onclick="scheduleReminder()" class="btn-secondary">
-              <span class="material-symbols-outlined">notifications_active</span>
-              Programmer Rappels (Veille)
-            </button>
+        <!-- Date availability breakdown -->
+        <div class="animate-fade-in stagger-1">
+          <h3 class="font-bold mb-3 flex items-center gap-2">
+            <span class="w-1 h-5 bg-primary rounded-full inline-block"></span>
+            Résumé par date
+          </h3>
+          <div class="space-y-3">
+            ${dateSummaryHtml || '<p class="text-text-secondary text-sm text-center py-4">Aucune date proposée</p>'}
           </div>
         </div>
+
+        ${isConfirmed ? `
+        <div class="card p-4 border-l-4 border-primary animate-fade-in stagger-2">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="material-symbols-outlined text-primary">check_circle</span>
+            <h3 class="font-bold text-primary">Session Validée</h3>
+          </div>
+          <p class="text-sm text-text-secondary">Date : ${activeCampaign.confirmed_date || 'N/A'}</p>
+          <p class="text-sm text-text-secondary">${(activeCampaign.confirmed_players || []).length} joueur(s) confirmé(s)</p>
+        </div>
+        ` : ''}
       </div>
     </div>
   `;
-}
-
-function addQuickItem(item) {
-    const textarea = document.getElementById('val-items');
-    if (textarea) {
-        textarea.value = textarea.value ? textarea.value + '\n• ' + item : '• ' + item;
-    }
-}
-
-async function sendInvitations() {
-    const btn = document.querySelector('button[onclick="sendInvitations()"]');
-    const originalContent = btn.innerHTML;
-    const items = document.getElementById('val-items').value || 'Aucune note particulière';
-    
-    btn.disabled = true;
-    btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Envoi...';
-
-    try {
-        // 1. Récupérer les emails des joueurs
-        const { data: players, error: pError } = await supabaseClient
-            .from('profiles')
-            .select('email, pseudo');
-        
-        if (pError) console.warn('Note: Erreur lors de la lecture des emails:', pError);
-
-        console.log('Joueurs trouvés pour invitations :', (players || []).map(p => p.pseudo));
-
-        const currentUser = getUser();
-        let recipientList = (players || [])
-            .map(p => p.email)
-            .filter(Boolean);
-        
-        // Fallback si on est seul
-        if (recipientList.length === 0 && currentUser && currentUser.email) {
-            recipientList = [currentUser.email];
-        }
-
-        if (recipientList.length === 0) {
-            throw new Error("Aucun destinataire trouvé.");
-        }
-
-        // 1.5 Mettre à jour le statut de la campagne
-        await supabaseClient
-            .from('campaigns')
-            .update({ status: 'confirmée' })
-            .eq('id', activeCampaign.id);
-
-        const mainDate = activeCampaign.proposed_dates && activeCampaign.proposed_dates[0] ? 
-            `${activeCampaign.proposed_dates[0]} ${MONTH_NAMES[activeCampaign.month]} ${activeCampaign.year}` : 
-            "Date à définir";
-
-        // 2. Appeler l'Edge Function
-        // On passe les infos de la session validée
-        const { data, error } = await supabaseClient.functions.invoke('send-session-email', {
-            body: { 
-                campaignName: `Session Confirmée : ${activeCampaign.name}`, 
-                dates: [mainDate],
-                recipients: recipientList,
-                customNote: items 
-            }
-        });
-
-        if (error) {
-            console.error('Erreur Supabase:', error);
-            throw new Error(`Erreur serveur (${error.context?.status || '?'})`);
-        }
-
-        if (data && data.error) throw new Error(data.error);
-
-        showToast(`📢 Invitations envoyées à ${recipientList.length} joueur(s) !`);
-        setTimeout(() => navigateTo('dashboard'), 2000);
-    } catch (err) {
-        console.error('Erreur Invitations:', err);
-        showToast('❌ Erreur : ' + (err.message || 'Problème de connexion'));
-    } finally {
-        btn.disabled = false;
-        btn.innerHTML = originalContent;
-    }
-}
-
-function scheduleReminder() {
-    showToast('🔔 Rappel programmé pour la veille !');
 }

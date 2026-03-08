@@ -1,7 +1,8 @@
 // ===== Disponibilités du Groupe =====
 
-let playersData = []; // To be filled with real profiles
+let playersData = []; // Real profiles from DB
 let myAvailability = {}; // Object mapping date string to array of slot availability [0, 0]
+let allAvailabilities = {}; // Object mapping user_id -> { dateKey -> [slot0, slot1] }
 let isLoadingData = false;
 
 async function loadAvailabilityData() {
@@ -29,18 +30,28 @@ async function loadAvailabilityData() {
       if (!cError) activeCampaign = campaign;
     }
 
-    // 3. Fetch my personal availabilities
+    // 3. Fetch ALL availabilities for this campaign (all players)
     const user = getUser();
-    if (user && activeCampaign) {
+    if (activeCampaign) {
       const { data: avails, error: aError } = await supabaseClient
         .from('availabilities')
         .select('*')
-        .eq('campaign_id', activeCampaign.id)
-        .eq('user_id', user.id);
+        .eq('campaign_id', activeCampaign.id);
       
       if (!aError && avails) {
+        // Reset
+        allAvailabilities = {};
+        myAvailability = {};
+        
         avails.forEach(av => {
-          myAvailability[av.date_key] = av.slots.map(s => s ? 1 : 0);
+          // Store in allAvailabilities keyed by user_id
+          if (!allAvailabilities[av.user_id]) allAvailabilities[av.user_id] = {};
+          allAvailabilities[av.user_id][av.date_key] = av.slots.map(s => s ? 1 : 0);
+          
+          // Also store in myAvailability for the current user
+          if (user && av.user_id === user.id) {
+            myAvailability[av.date_key] = av.slots.map(s => s ? 1 : 0);
+          }
         });
       }
     }
@@ -111,7 +122,7 @@ function renderDisponibilites(isUpdate = false) {
 
       <div class="flex-1 overflow-y-auto hide-scrollbar px-4 py-6">
         <!-- Campaign Info -->
-        <div class="flex items-center gap-3 mb-6 animate-fade-in">
+        <div class="flex items-center gap-3 mb-4 animate-fade-in">
           <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center border border-primary/30">
             <span class="material-symbols-outlined text-primary">fort</span>
           </div>
@@ -120,6 +131,31 @@ function renderDisponibilites(isUpdate = false) {
             <p class="text-sm text-text-secondary">Dates proposées en ${MONTH_NAMES[activeCampaign.month]} ${activeCampaign.year}</p>
           </div>
         </div>
+
+        ${activeCampaign.lieu ? `
+        <div class="flex items-center gap-2 mb-4 px-2 animate-fade-in">
+          <span class="material-symbols-outlined text-primary text-lg">location_on</span>
+          <span class="text-sm text-text-secondary">${activeCampaign.lieu}</span>
+        </div>
+        ` : ''}
+
+        ${activeCampaign.items_to_bring && activeCampaign.items_to_bring.length > 0 ? `
+        <div class="card p-4 mb-4 animate-fade-in">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="material-symbols-outlined text-primary text-lg">inventory_2</span>
+            <h3 class="font-bold text-sm">À apporter</h3>
+          </div>
+          <div class="space-y-1">
+            ${activeCampaign.items_to_bring.map(item => `
+              <label class="flex items-center gap-2 text-sm text-text-secondary cursor-pointer hover:text-white transition-colors">
+                <input type="checkbox" class="w-4 h-4 rounded border border-primary/40 bg-surface-dark checked:bg-primary appearance-none cursor-pointer relative
+                  after:content-[''] after:absolute after:top-[1px] after:left-[4px] after:w-[5px] after:h-[9px] after:border-r-2 after:border-b-2 after:border-background-dark after:rotate-45 after:hidden checked:after:block"/>
+                <span>${item}</span>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+        ` : ''}
 
         <!-- Scroll hint -->
         <div class="flex items-center justify-center gap-2 mb-2 text-text-secondary text-xs animate-fade-in stagger-1">
@@ -184,7 +220,7 @@ function renderDisponibilites(isUpdate = false) {
             <span class="material-symbols-outlined text-primary text-lg">info</span>
             <h3 class="font-bold">Légende</h3>
           </div>
-          <div class="flex items-center gap-6">
+          <div class="flex items-center gap-6 flex-wrap">
             <div class="flex items-center gap-2">
               <div class="w-5 h-5 rounded bg-primary"></div>
               <span class="text-xs">Disponible</span>
@@ -192,6 +228,10 @@ function renderDisponibilites(isUpdate = false) {
             <div class="flex items-center gap-2">
               <div class="w-5 h-5 rounded bg-rose-500/80"></div>
               <span class="text-xs">Indisponible</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-5 h-5 rounded" style="background: rgba(19, 236, 91, 0.15); border: 1px solid rgba(19, 236, 91, 0.2);"></div>
+              <span class="text-xs">Pas encore répondu</span>
             </div>
           </div>
           <p class="text-[10px] mt-3 text-text-secondary">Cliquez sur vos propres cases pour basculer entre Disponible (Vert) et Indisponible (Rouge).</p>
@@ -222,9 +262,23 @@ function renderAvailRows(dates) {
     dates.forEach((date, dateIndex) => {
       const key = `${activeCampaign.year}-${activeCampaign.month}-${date}`;
       for (let s = 0; s < 2; s++) { // 0=Aprem, 1=Soir
-        // Use myAvailability if it's the current user, or dummy 0 otherwise
-        const isAvail = isSelf ? (myAvailability[key] ? myAvailability[key][s] : 0) : 0;
-        const cls = isAvail ? 'available' : 'unavailable';
+        let isAvail, hasResponded;
+        if (isSelf) {
+          // Current user: use local myAvailability state
+          isAvail = myAvailability[key] ? myAvailability[key][s] : 0;
+          hasResponded = true; // Self always has a state
+        } else {
+          // Other players: use real data from allAvailabilities
+          const playerAvails = allAvailabilities[player.user_id];
+          if (playerAvails && playerAvails[key] !== undefined) {
+            isAvail = playerAvails[key][s];
+            hasResponded = true;
+          } else {
+            isAvail = 0;
+            hasResponded = false;
+          }
+        }
+        const cls = hasResponded ? (isAvail ? 'available' : 'unavailable') : 'unknown';
         const clickable = isSelf ? `onclick="toggleMyAvail('${key}', ${s})"` : '';
         const cursorCls = isSelf ? 'cursor-pointer hover:scale-105 active:scale-95' : 'opacity-80';
         const borderL = s === 1 ? 'border-l border-primary/10' : '';

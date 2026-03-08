@@ -1,6 +1,11 @@
 // ===== Profil Aventurier =====
 function renderProfile() {
   const user = getUser() || {};
+  const avatarUrl = user.avatar_url;
+
+  const avatarContent = avatarUrl 
+    ? `<img src="${avatarUrl}" alt="Avatar" class="w-full h-full object-cover"/>`
+    : `<span class="material-symbols-outlined text-primary text-5xl">shield_person</span>`;
 
   return `
     <div class="flex flex-col min-h-[100dvh] pb-24">
@@ -19,12 +24,13 @@ function renderProfile() {
         <!-- Avatar Section -->
         <div class="flex flex-col items-center py-8 animate-fade-in">
           <div class="relative">
-            <div class="w-32 h-32 rounded-full border-4 border-primary shadow-[0_0_20px_rgba(19,236,91,0.3)] bg-surface-dark flex items-center justify-center overflow-hidden">
-              <span class="material-symbols-outlined text-primary text-5xl">shield_person</span>
+            <div id="profile-avatar-container" class="w-32 h-32 rounded-full border-4 border-primary shadow-[0_0_20px_rgba(19,236,91,0.3)] bg-surface-dark flex items-center justify-center overflow-hidden">
+              ${avatarContent}
             </div>
-            <button class="absolute bottom-0 right-0 bg-primary text-background-dark p-2 rounded-full shadow-lg border-2 border-background-dark hover:bg-primary-dark transition-colors">
+            <button onclick="triggerAvatarUpload()" class="absolute bottom-0 right-0 bg-primary text-background-dark p-2 rounded-full shadow-lg border-2 border-background-dark hover:bg-primary-dark transition-colors">
               <span class="material-symbols-outlined text-sm">edit</span>
             </button>
+            <input type="file" id="avatar-file-input" accept="image/*" class="hidden" onchange="handleAvatarSelect(event)"/>
           </div>
           <h2 class="text-2xl font-black mt-4">${user.pseudo || "Aventurier Inconnu"}</h2>
           <p class="text-primary text-sm font-bold uppercase tracking-widest mt-1">${user.role === 'mj' ? 'Maître du Jeu' : 'Joueur'}</p>
@@ -80,11 +86,64 @@ function renderProfile() {
   `;
 }
 
+// === Avatar Upload ===
+function triggerAvatarUpload() {
+  document.getElementById('avatar-file-input').click();
+}
+
+async function handleAvatarSelect(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const container = document.getElementById('profile-avatar-container');
+  if (container) {
+    container.innerHTML = '<div class="animate-spin"><span class="material-symbols-outlined text-primary text-3xl">sync</span></div>';
+  }
+
+  try {
+    // Optimize image client-side (200px max for avatar, quality 0.7)
+    const optimized = await optimizeImage(file, 200, 0.7);
+
+    // Upload to Supabase Storage
+    const user = getUser();
+    const fileName = `avatar_${user.id}_${Date.now()}.jpg`;
+    const avatarUrl = await uploadImageToStorage(optimized.blob, 'avatars', fileName);
+
+    // Update profile in database
+    const { error } = await supabaseClient
+      .from('profiles')
+      .update({ avatar_url: avatarUrl })
+      .eq('user_id', user.id);
+
+    if (error) throw error;
+
+    // Update local state
+    currentUser.avatar_url = avatarUrl;
+    localStorage.setItem('dnd_user', JSON.stringify(currentUser));
+
+    // Update UI
+    if (container) {
+      container.innerHTML = `<img src="${avatarUrl}" alt="Avatar" class="w-full h-full object-cover"/>`;
+    }
+
+    showToast('✨ Avatar mis à jour !');
+  } catch (err) {
+    console.error('Avatar upload error:', err);
+    showToast('❌ Erreur lors de l\'upload de l\'avatar');
+    // Restore default icon
+    if (container) {
+      container.innerHTML = '<span class="material-symbols-outlined text-primary text-5xl">shield_person</span>';
+    }
+  }
+}
+
+// optimizeImage and uploadImageToStorage are defined in campaign-config.js
+// They are global functions available across the app
+
 async function saveProfile() {
   const pseudo = document.getElementById('profile-pseudo')?.value;
 
   if (currentUser && currentUser.id) {
-    // Update in Supabase
     const { error } = await supabaseClient
       .from('profiles')
       .update({ pseudo })
@@ -98,7 +157,7 @@ async function saveProfile() {
     currentUser.pseudo = pseudo;
     localStorage.setItem('dnd_user', JSON.stringify(currentUser));
     showToast('✨ Profil mis à jour !');
-    render(); // Re-render to update the name at top
+    render();
   } else {
     showToast('❌ Vous n\'êtes pas connecté !');
   }
