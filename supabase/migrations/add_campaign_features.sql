@@ -12,7 +12,6 @@ ALTER TABLE campaigns ADD COLUMN IF NOT EXISTS confirmed_players JSONB DEFAULT '
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS avatar_url TEXT;
 
 -- === Storage Buckets ===
--- Créer les buckets pour les images (avatars + campagnes)
 INSERT INTO storage.buckets (id, name, public)
 VALUES ('avatars', 'avatars', true)
 ON CONFLICT (id) DO NOTHING;
@@ -22,36 +21,44 @@ VALUES ('campaign-images', 'campaign-images', true)
 ON CONFLICT (id) DO NOTHING;
 
 -- === Politiques RLS pour Storage ===
--- Tout le monde peut lire les avatars
-CREATE POLICY IF NOT EXISTS "Public read avatars"
+-- Supprimer les anciennes policies si elles existent, puis les recréer
+DROP POLICY IF EXISTS "Public read avatars" ON storage.objects;
+DROP POLICY IF EXISTS "Auth users upload avatars" ON storage.objects;
+DROP POLICY IF EXISTS "Auth users update own avatars" ON storage.objects;
+DROP POLICY IF EXISTS "Public read campaign images" ON storage.objects;
+DROP POLICY IF EXISTS "Auth users upload campaign images" ON storage.objects;
+DROP POLICY IF EXISTS "Auth users update campaign images" ON storage.objects;
+
+-- Lecture publique des avatars
+CREATE POLICY "Public read avatars"
 ON storage.objects FOR SELECT
 USING (bucket_id = 'avatars');
 
--- Les utilisateurs authentifiés peuvent uploader leur avatar
-CREATE POLICY IF NOT EXISTS "Auth users upload avatars"
+-- Upload d'avatars pour les utilisateurs authentifiés
+CREATE POLICY "Auth users upload avatars"
 ON storage.objects FOR INSERT
 TO authenticated
 WITH CHECK (bucket_id = 'avatars');
 
--- Les utilisateurs peuvent mettre à jour leur propre avatar
-CREATE POLICY IF NOT EXISTS "Auth users update own avatars"
+-- Mise à jour d'avatars
+CREATE POLICY "Auth users update own avatars"
 ON storage.objects FOR UPDATE
 TO authenticated
 USING (bucket_id = 'avatars');
 
--- Tout le monde peut lire les images de campagne
-CREATE POLICY IF NOT EXISTS "Public read campaign images"
+-- Lecture publique des images de campagne
+CREATE POLICY "Public read campaign images"
 ON storage.objects FOR SELECT
 USING (bucket_id = 'campaign-images');
 
--- Les utilisateurs authentifiés peuvent uploader des images de campagne
-CREATE POLICY IF NOT EXISTS "Auth users upload campaign images"
+-- Upload d'images de campagne
+CREATE POLICY "Auth users upload campaign images"
 ON storage.objects FOR INSERT
 TO authenticated
 WITH CHECK (bucket_id = 'campaign-images');
 
--- Les utilisateurs peuvent mettre à jour les images de campagne
-CREATE POLICY IF NOT EXISTS "Auth users update campaign images"
+-- Mise à jour d'images de campagne
+CREATE POLICY "Auth users update campaign images"
 ON storage.objects FOR UPDATE
 TO authenticated
 USING (bucket_id = 'campaign-images');
